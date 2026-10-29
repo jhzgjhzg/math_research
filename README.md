@@ -2,7 +2,7 @@
 
 Rules and procedures for mathematical research with Codex.
 
-Version: **0.1.0**
+Version: **0.1.1**
 
 | Language | Project rules | Research procedure |
 | --- | --- | --- |

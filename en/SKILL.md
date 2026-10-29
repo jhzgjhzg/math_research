@@ -79,22 +79,31 @@ Use stable identifiers such as these:
 | Literature source | `L001` |
 | Computation run | `R003P01/E001` |
 
-The pair identifier keeps its original round prefix across subsequent rounds.
+Each pair belongs to one round. New rounds use new pair identifiers.
+During recovery within the same round, keep its pair identifiers.
+Inherited facts keep their original identifiers, revisions, and source references.
+
 An agent session identifier is only an additional reference.
 It does not replace the logical role or pair identifier.
 For historical evidence, refer to fixed records with their identifiers, versions, and actual paths.
 `CURRENT.yaml`, `HEAD.yaml`, and `final/` are changeable entry points.
 They are not sufficient identifiers for fixed historical evidence.
 
-## 2. Start or resume a round — controller
+## 2. Start a new round — controller
+
+A new round accepts only user requirements, `CURRENT.yaml`, the current fact graph, and the latest `final/` summary.
+Do not read previous pair directories, submissions, reviews, drafts, or checkpoints to start a new round.
+Use section 9 to record a previous pause or resume an interrupted round.
+A pause entry alone does not make execution recovery necessary.
+Before new-round setup, complete any necessary confirmation from section 9.
 
 1. Read the user's target, limits, changes, and interruption report.
-2. For a pause entry or recovery of an earlier round, use section 9.
-3. If `CURRENT.yaml` is available, read it.
-4. Read the latest handoff in this order: `START_HERE.md`, `RESULT.yaml`, `PROBLEM.md`, then `FRONTIER.md`.
-5. Read the full fact records necessary for the current task.
-6. Use the user agreement to select the same round or a new round.
-7. Record the exact target and the adopted policy in the control files.
+2. If `CURRENT.yaml` is available, read it.
+3. Read the latest handoff in this order: `START_HERE.md`, `RESULT.yaml`, `PROBLEM.md`, then `FRONTIER.md`.
+4. Read the full fact records necessary for the current task.
+5. If the recovery conditions apply, use section 9 instead of the new-round steps below.
+6. Record the new round, exact target, adopted policy, and new budgets in the control files.
+7. Set `started_pair_ids` to `[]`.
 8. Save a full initial fact snapshot with the applicable inherited facts.
 9. After you save the full snapshot, update the graph entry points.
 10. Assign the literature task to the researcher.
@@ -103,6 +112,10 @@ If there is no earlier state, initialize the project records.
 An initial graph can contain no accepted results.
 A new conversation does not automatically create a new round budget.
 Do not read `additional_papers/` during routine startup or recovery.
+
+Create new pair identifiers, role assignments, and `TASK.md` records for this round.
+Start each pair's submission sequence at `v01`.
+Do not transfer previous pairs, pending reviews, or used submission counts into the new round.
 
 Use these record contents:
 
@@ -117,8 +130,8 @@ Use these record contents:
 
 Use `max_pairs`, `max_formal_submissions_per_pair`, and `started_pair_ids` for the budget fields.
 Record cumulative results, the approved partial-result scope, and project-level novelty in the policy.
-Record pair counting and submission counting across rounds in the policy.
-Calculate counts from the formal records.
+Count pairs and submissions within each round. Keep used counts through pauses and sessions in that round.
+Calculate counts from the current round's formal records.
 Do not maintain a second independent budget ledger.
 
 If the target changes, save a new problem version such as `PROBLEM_r02.md`.
@@ -327,7 +340,7 @@ For completion without interruption, use only necessary pair slots and actual ou
 | `RESULT.yaml` | Actual ending declaration, result evidence, scope, remaining obligations, issues, and handoff completeness. |
 | `PROBLEM.md` | Copy of the target version in use, with its identifier, revision, and source path. |
 | `FACTS.json` | Unchanged copy of the full source snapshot, including its graph identifier and fact availability. |
-| `FRONTIER.md` | Open proof obligations, route positions, accepted local results and conditions, failed steps, source requests, issues, exact continuation paths, and remaining submission budgets. |
+| `FRONTIER.md` | Open proof obligations, route outcomes, accepted partial results and conditions, failed steps, source requests, issues, and candidate targets. |
 
 For known information in `RESULT.yaml`, use these fields:
 
@@ -340,8 +353,10 @@ For known information in `RESULT.yaml`, use these fields:
 Use a clear literature correspondence or verifier decision as the result basis.
 Keep changes in `START_HERE.md` and evidence paths in the existing records.
 Do not make separate delta or automatic index files necessary.
-The handoff must give sufficient information about the round without the full conversation history.
-For detailed source checks, use references to evidence beyond `final/`.
+The handoff must support a new round without previous execution records or the full conversation history.
+Keep unresolved ideas as candidate targets. Only admitted facts can serve as existing premises.
+
+During research, read cited evidence beyond `final/` only for a specific source check.
 Before future use of a historical fact, examine its current availability through `CURRENT.yaml`.
 
 Keep failed proofs, rejected submissions, reviews, snapshots, and drafts necessary for recovery.
@@ -363,25 +378,26 @@ Do not wait for unfinished work or a full five-file handoff.
 
 ### Add an earlier pause entry
 
-The two bases below are independent.
+If the user reports an earlier interruption, add `PAUSE` to the identified round directly.
+Use `pause_basis: USER_REPORTED_INTERRUPTION`.
+If the user reports a usage limit, record `pause_reason: USAGE_LIMIT`.
+Do not make a search necessary for this entry.
+The user's interruption report permits a pause entry when previous files are inaccessible.
 
-| Basis | Procedure |
-| --- | --- |
-| `USER_REPORTED_INTERRUPTION` | Record the user's report for the identified previous round directly. If the user reports a usage limit, record `USAGE_LIMIT`. |
-| `ENDING_KEYWORD_NOT_FOUND` | Record the actual accessible search scope and the absence of an actual ending declaration. Keep access failures separate. |
-
-For the search basis, examine available ending records, handoff entries, recovery records, and ending messages for the previous round.
-If the previous round used a different layout, use its ending locations.
+An actual search without an ending declaration also permits a subsequent pause entry.
+Use `pause_basis: ENDING_KEYWORD_NOT_FOUND` and record `search_scope`.
+At new-round startup, search only user-provided ending messages and the previous round's accessible handoff records.
+Use `CURRENT.yaml` to locate that handoff.
 An actual ending declaration must identify the round and announce its result or pause.
 Accept the four mathematical result keywords or an actual `PAUSE` declaration in that context.
 
 Ignore templates, rule definitions, hypothetical statements, local lemma decisions, other rounds, and intermediate progress.
-If there is more than one declaration, use the applicable record version.
-If no material is accessible, do not claim a search without a match.
-The user's interruption report permits a pause entry when previous files are inaccessible.
+Use the latest applicable record to determine whether that round remains interrupted.
+An access failure is not a search without a match.
+If no records are accessible, do not claim a search without a match.
 
 Record `pause_basis`, the known `pause_reason`, `recorded_at`, and the round or session that makes the entry.
-For a search, record `search_scope` and access limits.
+Record access limits.
 Before the administrative addition, keep earlier result information or a clear historical copy.
 
 If there is no previous result file, create a minimum record. Identify it as an entry made after the interruption.
@@ -389,25 +405,31 @@ Do not invent an interruption time or infer a usage limit from a missing declara
 Use an event for a simple recovery.
 For recovery details beyond an event, use `audit/recovery/RECOVERY_NNN.md`. Record evidence, unknowns, changes, and next actions.
 
-### Continue work
+After you add `PAUSE` with `pause_basis: ENDING_KEYWORD_NOT_FOUND`, apply this confirmation rule.
+If the current prompt does not request that round's continuation, ask whether to resume it or start a new round.
+This confirmation also applies when the current prompt requests a new round.
+After you ask, wait for the user's choice before execution recovery or new-round startup.
+
+### Resume the interrupted round
+
+Recover execution records only when both conditions hold:
+
+- The latest applicable pause record or the user's report identifies the previous round as interrupted.
+- The current task is to continue that same round.
+
+After any necessary confirmation, use section 2 for a requested new round with new pairs and budgets.
+If the intended round is unclear, ask the user before you read execution records.
+During recovery, read only the interrupted round's execution records.
 
 1. Locate the last full, identifiable target and graph versions.
 2. Recover literature admissions and completed verifier decisions from formal records.
 3. Locate unfinished pairs, exact submissions, review progress, and submission history.
 4. Separate accepted facts, pending drafts, and incomplete files.
 5. Restore accepted results that only lack mechanical graph entry.
-6. Record the selected round for continuation, in accordance with the user agreement.
+6. Continue in the existing round and pair directories.
 7. Before research continues, save the recovery basis.
 
-For the same round, keep all used pair slots and submission counts.
-For a new round, count each pair that continues proof or review work in that round.
-Keep the original pair identity, fixed roles, and cumulative submission count.
-In the new pair directory, create `CONTINUE.yaml` instead of a second independent original task.
-
-`CONTINUE.yaml` refers to the original `TASK.md`, pair, fixed roles, continued submission, last completed review, and all formal submissions.
-Also record the current graph, input changes, continued scope, and counting policy.
-Keep previous evidence in the previous round.
-Save only new work in the new round.
+Keep the original round identifier, pair identities, fixed roles, used pair slots, and submission counts.
 Continued review of `v03` is review of `v03`.
 A formal repair after that review uses `v04`.
 

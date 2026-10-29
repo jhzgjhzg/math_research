@@ -10,7 +10,7 @@ If present, use it for further procedure details.
 | --- | --- |
 | Target | The exact mathematical problem and its version. |
 | Route | One proof method or one method to construct a counterexample. |
-| Pair | One fixed worker and one fixed verifier for one route. |
+| Pair | One fixed worker and one fixed verifier for one route in one round. |
 | Round | Research work with a stated target and pair limit. |
 | Session | One Codex conversation or execution context. |
 | Fact | A full mathematical record with its conditions and source. |
@@ -40,7 +40,7 @@ Role instructions do not create sandbox isolation.
 | Worker | Develop one route. Write proofs or counterexamples. Do necessary computations. Submit work and repair reported defects. | Do not approve your own work or add candidate results to the accepted facts. |
 | Verifier | Review only the fixed worker. Examine correctness and exact target coverage. Accept clear results or request repairs. | Do not review another worker or silently supply a missing proof in an unchanged submission. |
 
-Keep each worker and verifier pair fixed through all repairs.
+Within a round, keep each worker and verifier pair fixed through all repairs.
 Do not change the verifier to get a different decision.
 If an agent instance is lost, a replacement can continue the same role with its task and review history.
 Keep the pair identity and budget unchanged.
@@ -79,7 +79,7 @@ Keep unaccepted proofs in their pair and the controller's administrative scope.
 For use by a different route, send a candidate claim as a target to prove.
 
 If a new deduction must combine accepted results, assign the deduction to a pair in the round budget.
-The original pair can complete this work in its route and remaining submission budget.
+Within the same round, the original pair can complete this work in its route and remaining submission budget.
 For a new core method, use a new pair.
 A summary cannot replace a combination proof.
 To use `L ⇒ T` as a proof of `T`, first supply accepted support for `L`.
@@ -114,13 +114,13 @@ Apply clear user changes to that policy.
 | Pair limit | 4 in each round. A round can specify 3 as an alternative. |
 | Pair count | All different pairs that do proof or review work in that round. |
 | Submission limit | 1 first submission and 3 repairs. Maximum: 4 for each pair. |
-| Submission history | The count continues across pauses, sessions, and rounds. |
+| Submission history | The count continues across pauses and sessions within the same round. New rounds start with new pairs and counts. |
 | Result scope | Cumulative progress for the exact target through this round. |
 | New result | A related result derived and accepted in this project. Global novelty is a separate claim. |
 | Partial result | An accepted restricted result, substantial lemma, weaker conclusion, partial parameter result, or rigorous reduction. |
 
-New exploration, combination proofs, separate lemma tasks, and continued pairs use round slots.
-Repairs in one pair do not use another slot.
+New exploration, combination proofs, and separate lemma tasks use round slots.
+Repairs and resumed work in the same pair do not use another slot.
 Literature work, route plans, previous fact reads, and administrative recovery do not use pair slots.
 Completed or failed pairs do not return slots.
 
@@ -130,11 +130,11 @@ One slot can stay available for subsequent tasks. Its use is optional.
 When the worker formally sends a fixed version for review, count one submission.
 Draft edits, repeated delivery, continued review, and formatting alone do not increase the count.
 After changes to claims, hypotheses, dependencies, or proof content, use a new version for the next formal submission.
-Do not reset counts through a rename, a new session, or a replacement agent.
+Within a round, do not reset counts through a rename, a new session, or a replacement agent.
 
-Before work that uses remaining budget, recover unknown counts.
-Before additional submissions, get a clear user agreement. Record the previous pair history.
-Do not start another round to avoid a budget limit.
+Before resumed work uses remaining budget, recover unknown counts.
+Before you exceed a pair's submission limit, get a clear user agreement. Keep the pair's history.
+A new session alone does not create a new round budget.
 Before automatic work across rounds, get a user agreement.
 
 Use only these mathematical result values:
@@ -191,7 +191,7 @@ Keep these records at the project root or the round root:
 | Round | `CHECKPOINT.yaml` | Last full graph, formal submissions, completed and pending reviews, accepted facts awaiting entry, open requests, work paths, and next action. |
 
 Use `max_pairs`, `max_formal_submissions_per_pair`, and `started_pair_ids` for budget fields.
-Calculate counts from formal records. Do not maintain a second independent budget ledger.
+Calculate counts from the current round's formal records. Do not maintain a second independent budget ledger.
 
 Keep these nine directory functions in each round:
 
@@ -248,16 +248,28 @@ Keep necessary role checks and mathematical computation code.
 
 ## 6. Research sequence and handoff
 
+A new round accepts only user requirements, `CURRENT.yaml`, the current fact graph, and the latest `final/` summary.
+Do not read previous pair directories, submissions, reviews, drafts, or checkpoints to start a new round.
+Use section 7 to record a previous pause or resume an interrupted round.
+A pause entry alone does not make execution recovery necessary.
+Before new-round setup, complete any necessary confirmation from section 7.
+
 1. Read the target, user limits, and available `CURRENT.yaml`.
 2. Read the latest handoff and full facts necessary for the task.
-3. For interrupted work, use section 7 before more research.
-4. Record the exact target, adopted policy, budgets, and initial full fact snapshot.
+3. If the recovery conditions apply, use section 7 instead of the new-round steps below.
+4. Record the new round, exact target, adopted policy, new budgets, and initial full fact snapshot.
 5. Assign literature research and record its admissions.
 6. Select different core routes within the pair limit.
 7. Give each worker its task, permitted facts, and fixed verifier.
 8. Record each pair when its proof or review work starts.
 9. Submit fixed work for review within the submission limit.
 10. Publish admitted facts with their exact scope and dependencies.
+
+For each new round, set `started_pair_ids` to `[]`.
+Create new pair identifiers, role assignments, and `TASK.md` records.
+Start each pair's submission sequence at `v01`.
+Do not transfer previous pairs, pending reviews, or used submission counts into the new round.
+Keep inherited facts with their original identifiers, revisions, and source references.
 
 If literature directly settles the target, record the exact target correspondence.
 No proof pair is necessary for that result.
@@ -273,7 +285,7 @@ For completion without interruption, use these five files in `final/`:
 | `RESULT.yaml` | Ending declaration, result and evidence, scope, new results, remaining obligations, issues, source graph, record time, and handoff completeness. |
 | `PROBLEM.md` | Copy of the target version in use, with its identifier, revision, and source path. |
 | `FACTS.json` | Unchanged copy of the full source snapshot, with its graph identifier and fact availability. |
-| `FRONTIER.md` | Open obligations, route positions, accepted partial results and conditions, failed steps, source requests, issues, continuation paths, and remaining submission budgets. |
+| `FRONTIER.md` | Open proof obligations, route outcomes, accepted partial results and conditions, failed steps, source requests, issues, and candidate targets. |
 
 1. Collect formal results and unfinished tasks.
 2. Publish accepted facts that still await graph entry.
@@ -287,8 +299,11 @@ In `RESULT.yaml`, use `record_type: ROUND_END`, `round_id`, the target identifie
 Include known `result_status`, `result_scope`, `basis_fact_ids`, `new_results_this_round`, `scope_note`, `remaining_obligations`, `source_graph_id`, `issues`, `handoff_complete`, and `missing_files`.
 
 Use explicit literature correspondence or verifier decisions as evidence.
-The handoff must permit continuation without the full conversation history.
+The handoff must support a new round without previous execution records or the full conversation history.
+Keep unresolved ideas as candidate targets. Only admitted facts can serve as existing premises.
+
 Evidence can remain at its actual paths outside `final/`.
+During research, read cited evidence only for a specific source check.
 Keep failed proofs, rejected submissions, reviews, snapshots, and drafts necessary for recovery.
 Do not start another round without the user's instruction or an existing agreement.
 
@@ -307,38 +322,49 @@ Record the round, `run_status: PAUSE`, trigger, actual record time, and handoff 
 Include known results, evidence, last reliable graph, pending tasks, exact versions, used submissions, missing files, and next action.
 For unknown values, omit the fields and record the missing information.
 
-If the user reports an earlier usage-limit interruption, add `PAUSE` to that round directly.
+If the user reports an earlier interruption, add `PAUSE` to the identified round directly.
 Do not add a prerequisite investigation or keyword search.
-Use `pause_basis: USER_REPORTED_INTERRUPTION` and the reported `pause_reason: USAGE_LIMIT`.
+Use `pause_basis: USER_REPORTED_INTERRUPTION`.
+If the user reports a usage limit, record `pause_reason: USAGE_LIMIT`.
 
-Without that report, an actual search without an actual ending declaration can justify a subsequent `PAUSE` entry.
+An actual search without an ending declaration also permits a subsequent pause entry.
 Use `pause_basis: ENDING_KEYWORD_NOT_FOUND` and record `search_scope`.
-Search accessible ending records, handoffs, recovery records, and ending messages for that round, including previous layouts.
+At new-round startup, search only user-provided ending messages and the previous round's accessible handoff records.
+Use `CURRENT.yaml` to locate that handoff.
 An actual ending declaration identifies the round and announces its mathematical result or `PAUSE`.
-Ignore templates, rule definitions, hypothetical statements, local lemma decisions, other rounds, and intermediate progress.
-Use the applicable record version if declarations differ.
 
+Ignore templates, rule definitions, hypothetical statements, local lemma decisions, other rounds, and intermediate progress.
+Use the latest applicable record to determine whether that round remains interrupted.
 An access failure is not a search without a match.
+If no records are accessible, do not claim a search without a match.
+
 Record access limits and the actual basis and time of a subsequent entry.
 Keep earlier result information or a historical copy before this addition.
 If the result file is absent, create a minimum record identified as a subsequent entry.
 Do not invent the cause or time of interruption.
 
+After you add `PAUSE` with `pause_basis: ENDING_KEYWORD_NOT_FOUND`, apply this confirmation rule.
+If the current prompt does not request that round's continuation, ask whether to resume it or start a new round.
+This confirmation also applies when the current prompt requests a new round.
+After you ask, wait for the user's choice before execution recovery or new-round startup.
+
+Recover execution records only when both conditions hold:
+
+- The latest applicable pause record or the user's report identifies the previous round as interrupted.
+- The current task is to continue that same round.
+
+After any necessary confirmation, use section 6 for a requested new round with new pairs and budgets.
+If the intended round is unclear, ask the user before you read execution records.
+During recovery, read only the interrupted round's execution records.
+
 1. Locate the last full target and graph versions.
 2. Recover admissions, completed reviews, unfinished pairs, exact submissions, and counts from formal records.
 3. Separate accepted facts, pending drafts, and incomplete files.
 4. Publish accepted results that only lack mechanical graph entry.
-5. Use the user agreement to select continuation in the same round or a new round.
+5. Continue in the existing round and pair directories.
 6. Before research continues, record recovery evidence, unknowns, changes, and next actions in `audit/`.
 
-For the same round, keep used pair slots and submission counts.
-For a new round, count each continued pair that starts proof or review work there.
-Keep the original pair identity, fixed roles, and cumulative submission count.
-
-In the new pair directory, use `CONTINUE.yaml` to refer to the original `TASK.md`.
-Include pair and role identities, continued submission, last completed review, all formal submissions, current graph, input changes, scope, and counts.
-Keep previous evidence in the previous round. Save only new work in the new round.
-
+Keep the original round identifier, pair identities, fixed roles, used pair slots, and submission counts.
 Continued review of `v03` stays at `v03`. A formal repair uses `v04`.
 
 Before a new handoff replaces an earlier one, save the earlier handoff in `audit/handoffs/HNNN/`.
