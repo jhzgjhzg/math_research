@@ -2,7 +2,7 @@
 name: math-research
 description: Run mathematical research or integrate accumulated results into a paper. Use fixed worker-verifier pairs, literature research, originality checks, versioned facts, and handoffs. Resume interrupted research rounds only.
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Mathematical research procedure
@@ -649,6 +649,8 @@ The originality pair works within this paper task, with the same task identifier
 The researcher supplies literature. No separate user request for originality work is necessary.
 
 The presentation worker submits a report and proposed changes to its own verifier.
+The report must include checks of mathematical language, proof ideas, citations, and consistency between source files and the PDF.
+
 The main worker incorporates accepted results and reviewed presentation changes into its manuscript.
 The main verifier decides on that worker's exact complete manuscript.
 The presentation decision does not replace the main manuscript decision.
@@ -718,6 +720,7 @@ Journal-specific formatting is outside this procedure.
 
 For papers, preserve full mathematical meaning and standard field terminology first.
 Use clear words, stable terms, and short sentence structures.
+For results from other fields, explain how their notation and terms correspond to those in the paper.
 Do not force paper language into the ASD-STE100 dictionary or sentence limits.
 Preserve quantifier order, parameter ranges, constant dependencies, regularity, topology, and uniformity.
 Keep existence, uniqueness, necessity, and sufficiency distinct.

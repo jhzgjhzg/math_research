@@ -1,6 +1,6 @@
 # Mathematical research rules
 
-Version: 0.2.0.
+Version: 0.2.1.
 
 ## 1. Scope and terms
 
@@ -414,6 +414,8 @@ Summarize counts from formal records in `PAPER.md`.
 
 The inventory pair proposes topics and result choices; mathematical pairs supply admitted connecting arguments.
 The presentation worker submits its report and proposed changes to its own verifier.
+The report must include checks of mathematical language, proof ideas, citations, and consistency between source files and the PDF.
+
 The main worker incorporates admitted results and reviewed changes; its verifier decides on the fixed complete manuscript.
 Presentation review does not replace main manuscript review.
 The controller can arrange records and compile, but cannot supply mathematical connections or manuscript decisions.
@@ -468,8 +470,10 @@ Journal-specific formatting is outside this procedure.
 
 For papers, full mathematical meaning and standard field terminology take priority over mechanical STE word and sentence limits.
 Use clear words, stable terms, and short structures.
+For results from other fields, explain how their notation and terms correspond to those in the paper.
 Preserve quantifiers, parameter ranges, constant dependencies, regularity, topology, and uniformity.
 Distinguish existence/uniqueness and necessary/sufficient conditions.
+
 Review mathematical effects of language changes; reuse unaffected checks.
 Formal resubmission after changes still uses the submission-count rules.
 

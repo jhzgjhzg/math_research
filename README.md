@@ -2,7 +2,7 @@
 
 Rules and procedures for mathematical research and paper integration with Codex.
 
-Version: **0.2.0**
+Version: **0.2.1**
 
 | Language | Project rules | Research procedure |
 | --- | --- | --- |
