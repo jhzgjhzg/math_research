@@ -1,0 +1,14 @@
+{
+  "researcher": {
+    "model": "gpt-6.2-sol",
+    "reasoning_effort": "max"
+  },
+  "worker": {
+    "model": "gpt-6.2-astra",
+    "reasoning_effort": "xhigh"
+  },
+  "verifier": {
+    "model": "gpt-6.2-astra",
+    "reasoning_effort": "max"
+  }
+}

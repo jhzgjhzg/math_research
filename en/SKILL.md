@@ -2,7 +2,7 @@
 name: math-research
 description: Run a mathematical research round, resume an interrupted round, or integrate project results into a paper. Requires the project AGENTS.md from the same release.
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
 ---
 
 # Mathematical research procedure
@@ -83,6 +83,7 @@ The tree shows permitted locations. Create files only at the necessary research 
 project/
   AGENTS.md
   PROJECT_RULES.md                 # Optional
+  SUBAGENT_MODELS.json             # Optional
   README.md
   CURRENT.yaml
   fact_graph/
@@ -176,7 +177,7 @@ They are not sufficient identifiers for fixed historical evidence.
 ## 2. Start a new round — controller
 
 A new round accepts only user requirements, `CURRENT.yaml`, the current fact graph, and the latest `final/` summary.
-Use the entry check in section 1. User requirements include the project rules that apply to this round.
+Use the entry check in section 1. User requirements include this round's project rules and subagent settings.
 Do not read previous pair directories, submissions, reviews, drafts, or checkpoints to start a new round.
 
 Use section 9 to record a previous pause or resume an interrupted round.
@@ -191,7 +192,8 @@ Before new-round setup, complete any necessary confirmation from section 9.
 6. Record the new round, exact target, rules reference, exceptions, policy, and new budgets.
 7. If no graph exists, publish the initial project graph under section 6.
 8. Record the fixed published input graph version. A new round needs only a reference to this version.
-9. Assign the literature task to the researcher.
+9. Apply the subagent model settings in `AGENTS.md`.
+10. Assign the literature task to the researcher.
 
 If there is no earlier state, initialize the project records.
 An initial graph can contain no accepted results.
@@ -211,7 +213,7 @@ Use the required contents for each record.
 | `README.md` | Project purpose, rule locations, date and path conventions, adopted policy location, reading order, supplementary-paper rule, deferred features. No separate progress ledger. |
 | `CURRENT.yaml` | `project_id`, `current_round`, `current_fact_head`, `latest_handoff`. `current_fact_head` points to root `fact_graph/HEAD.yaml`. Fill paths only after targets exist. |
 | `PROBLEM.md` | Original question, exact target, identifier and revision, objects, quantifiers, ranges, hypotheses, conclusion, definition references, additional requests, uncertainties, changes. |
-| `ROUND.yaml` | Round identifier, creation time, previous round, target revision and path. Fixed input and output graphs, budgets, started pairs, policy, and user instructions. Include `project_rules_ref` and task exceptions. |
+| `ROUND.yaml` | Round identifier, creation time, previous round, target revision and path. Fixed input and output graphs, budgets, started pairs, policy, and user instructions. Include `project_rules_ref`, `subagent_models`, and task exceptions. |
 | `ROUTES.md` | Route identifier, purpose, core method, sources, accepted inputs, distinguishing features, proof gaps, pair assignment, outcome, and stop reason. |
 | `CHECKPOINT.yaml` | Last full graph, submissions, completed and pending reviews, accepted results awaiting entry, open requests, draft or code paths, next action. Use the formal records as the basis. |
 
@@ -326,8 +328,8 @@ Changes to paper structure or language stay within the assigned paper task.
 4. Request missing external facts from the researcher through the controller.
 5. If a research route's core method must change, report the change to the controller.
 6. Prepare the next formal submission in the remaining budget.
-7. Fix the submission content in `submissions/vNN/`.
-8. Send the exact version to the fixed verifier.
+7. Save the submission in `submissions/vNN/`. Do not change this version.
+8. Send this version to your assigned verifier for review.
 
 Use `v01` for the first submission. Increase the version for each formal repair within the task's actual limit.
 Put the proof in `SUBMISSION.md` or in a clearly identified `proof.tex`.
@@ -446,8 +448,9 @@ A new proof of an existing fact needs new support admitted through `DERIVED`.
 Other valid support for the fact does not establish that proof.
 Task restrictions govern use of evidence. Preserve the fact's admission and its historical support records.
 
-If one support fails, retain another accepted, applicable support for the exact statement.
-Stop affected support and dependent results without valid applicable support.
+If a support record is no longer valid, stop using it.
+Keep any other accepted support that applies to the exact statement.
+If a dependent result has no other valid support that applies to it, stop using that result.
 A defective proof does not by itself refute the claim.
 
 Send new mathematical judgments to the researcher or fixed pair. Do not decide them as controller.
@@ -612,7 +615,7 @@ For completion without interruption, use only necessary pair slots and actual ou
 
 1. Record the actual reason for completion.
 2. Collect formal outcomes and unfinished tasks.
-3. Add accepted facts that await graph entry.
+3. If an accepted result is still missing from the fact graph, add it from its original admission record.
 4. Publish graph changes under section 6, if changes are necessary.
 5. Identify the complete published graph for the handoff.
 6. Prepare the five handoff files in the table below.
@@ -666,7 +669,9 @@ Keep established mathematical results when a pause occurs.
 
 ### Immediate stop
 
-1. When the user tells you to stop immediately, stop new research work.
+Use these steps for an immediate stop request or a subagent model configuration error.
+
+1. Stop new work in the entire round.
 2. Send stop requests to active subagents.
 3. Save the available minimum pause information in `final/RESULT.yaml`.
 
@@ -674,6 +679,10 @@ Record the round, `run_status: PAUSE`, trigger, actual record time, and handoff 
 Include known results, their evidence, the last reliable graph, pending work, exact versions, used submissions, missing files, and next action.
 If a value is unknown, do not include its field. Record the missing information.
 Do not wait for unfinished proofs, reviews, a full handoff, a PDF, or cleanup.
+
+For a subagent model configuration error, set `pause_reason: SUBAGENT_MODEL_CONFIG_ERROR`. Include the error in the pause record.
+If Codex rejects a launch, the request itself uses no pair slot or formal submission.
+After reporting the error, wait for the user to request continuation of this round before resuming it.
 
 ### Add an earlier pause entry
 
@@ -721,11 +730,19 @@ If the intended round is unclear, ask the user before you read execution records
 During recovery, read only the interrupted round's execution records.
 Apply the fixed rules and any explicit changes under section 1 before resuming the work.
 
+Use the round's saved `subagent_models` for new launches. Keep each single-launch exception within its recorded scope.
+If a configuration error prevented the first valid settings record, read the corrected settings under `AGENTS.md`.
+For an older round without a settings record, use its recorded model instructions or the Codex defaults.
+
+Change a saved setting only at the user's explicit request. If the user selects a corrected file, read it again.
+Record the old and new values and the first affected launch.
+After a configuration error, check the settings before work resumes. If the error persists, keep the round paused.
+
 1. Locate the last full, identifiable target and graph versions.
 2. Recover literature admissions and completed verifier decisions from formal records.
 3. Locate unfinished pairs, exact submissions, review progress, and submission history.
 4. Separate accepted facts, pending drafts, and incomplete files.
-5. Restore accepted results that only lack mechanical graph entry.
+5. If an accepted result is still missing from the fact graph, add it from its original admission record.
 6. Continue in the existing round and pair directories.
 7. Before research continues, record the recovery basis in `audit/`.
 
@@ -754,6 +771,7 @@ Do not put every result in the paper. Record the disposition of omitted results.
 Create `out_papers/PAPER001/` at the project root, beside `rounds/` and `additional_papers/`.
 Use a new paper task identifier, pairs, and budget. Do not increase the round number.
 Do not change `CURRENT.yaml.current_round` or the research `latest_handoff`.
+Before the first subagent starts, apply the model settings in `AGENTS.md`.
 
 Unless the user limits the scope, examine all results available when the task starts.
 Use the current project rules for each new paper task, including a new request after an interruption.
@@ -766,7 +784,7 @@ Get admission for omitted mathematical results before use as established facts.
 
 | Record | Contents |
 | --- | --- |
-| `PAPER.md` | User request, scope, topic, fixed input and output graphs. Original target version and mathematical result. Record `project_rules_ref`, task exceptions, delivery progress, budget summary, and open items. |
+| `PAPER.md` | User request, scope, topic, fixed input and output graphs. Original target version and mathematical result. Record `project_rules_ref`, `subagent_models`, task exceptions, delivery progress, budget summary, and open items. |
 | `INVENTORY.md` | Result identifiers, sources, admission states, topic groups, inclusion decisions, and reasons. Contribution claims and references to originality decisions. |
 | `pairs/` | Tasks, drafts, fixed submissions with `PROOF_IDEA.md`, and fixed reviews. |
 | `src/` | `main.tex`, `references.bib`, and `CLAIMS.yaml`. Exact facts, proof locations, and support versions for proof or method claims. |
@@ -834,6 +852,9 @@ Complete the task from one user request, with internal repairs as necessary.
 Do not end at a topic proposal or draft when the request is for a paper.
 Do not create a paper `PAUSE`, continuation entry point, or execution-recovery procedure.
 If a core argument needs extended research, change the topic or selected results.
+
+On a subagent model configuration error, stop the entire paper task. Send stop requests to its active subagents.
+Record incomplete delivery and the cause in `PAPER.md`. Report the error as specified in `AGENTS.md`.
 
 Near a submission limit, reduce the scope to a coherent paper with sufficient evidence.
 Review changed content within the remaining budget. Scope reduction does not remove review requirements.
