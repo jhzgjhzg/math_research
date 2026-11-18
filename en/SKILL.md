@@ -1,22 +1,74 @@
 ---
 name: math-research
-description: Run mathematical research or integrate accumulated results into a paper. Use fixed worker-verifier pairs, literature research, originality checks, versioned facts, and handoffs. Resume interrupted research rounds only.
+description: Run a mathematical research round, resume an interrupted round, or integrate project results into a paper. Requires the project AGENTS.md from the same release.
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Mathematical research procedure
 
 ## 1. Entry and project layout
 
-Before this procedure, read the instructions that apply to that project.
-When the user requests research, research continuation, or paper integration, use this procedure.
-Do not start research only because the user edits these instructions.
-The project rules give roles, admission rules, budgets, and mathematical result meanings.
+Read this skill and the research project's root `AGENTS.md` before a new round, research recovery, or paper integration.
+Editing these files does not start a research task.
 
-Use sections 10 and 11 for paper integration and its originality checks.
-Use section 9 only for interrupted research rounds.
-Use the section for your assigned role and the necessary task records.
+### Compare the release numbers
+
+The controller performs this check once per task start or request to resume, whichever file the user invokes first.
+Complete the check before you assign work, recover execution records, or write any task record.
+
+1. Read the version declaration in the actual project root `AGENTS.md`.
+2. Read `metadata.version` in the actual `SKILL.md` for the active research skill.
+3. Compare all three parts of the release numbers, including the patch number.
+
+If either file is missing or unreadable, stop. Also stop if either version is unknown or the versions differ.
+Give the user both file paths and both versions where known. State the missing information and the reason for stopping.
+
+Ask the user to use the files from one release. After the user synchronizes the files, repeat the check.
+Leave both files intact during this check. A change to a version label alone does not synchronize their contents.
+Use the actual files as evidence. Memory, skill listings, and the latest online release cannot establish a match.
+
+After a match, apply the other entry conditions for the requested task.
+Use section 2 for a new round, section 9 for research recovery, or section 10 for paper integration.
+
+### Apply project rules
+
+For a new round or paper task, locate `PROJECT_RULES.md` in the research project root after any required confirmation.
+If the file exists, read it before task setup.
+If the file is absent, use the user's instructions and the usual defaults.
+If it exists but you cannot read it, report its path. Wait for readable rules before you start the task.
+Only the two required files take part in the release check.
+
+For choices that this procedure permits, apply explicit instructions for the current task first.
+For other permitted choices, use applicable project rules, then the defaults.
+Distinguish requirements from preferences. Report the specific clauses that conflict.
+Ask the user only if an unresolved conflict affects the task.
+Keep the release check, fixed review, mathematical admission, and submission counting rules in force.
+
+During task setup, record the rules as follows.
+
+1. If the root file exists, save its exact text as `PROJECT_RULES_r01.md` in the task directory.
+2. Set `project_rules_ref` to the project-relative path of that fixed copy, or to `null` for confirmed absence.
+3. Record this reference and any task exceptions with their scope in `ROUND.yaml` or `PAPER.md`, as applicable.
+4. Give the researcher, workers, and verifiers the applicable clauses, task exceptions, and fixed record reference.
+
+Both members of a pair use the same rules and exceptions.
+Keep a task exception in its task record. Change the root file only upon an explicit request for a lasting change.
+
+For same-round recovery, first confirm both recovery conditions in section 9.
+Use the round's fixed rules and exceptions, including a recorded `null`.
+Report any addition, change, or removal of the root file since that record.
+If an older round has no rules record, examine that round's recorded user requirements.
+Ask the user if a condition essential to the task remains unknown.
+
+If the user explicitly changes the rules for active work, keep the previous references and exceptions.
+Record the change, its scope, and the work from which it applies.
+
+Save new text in the next fixed copy, such as `PROJECT_RULES_r02.md`. Update `project_rules_ref` in the task record.
+If the user explicitly removes all project rules for the active task, set its new reference to `null`.
+The responsible roles examine only affected targets, support, and submissions again. Keep all pair identities and used counts.
+
+### Project layout
 
 Use the project root as the base for all persistent paths.
 Use the user's time zone for dates.
@@ -30,6 +82,7 @@ The tree shows permitted locations. Create files only at the necessary research 
 ```text
 project/
   AGENTS.md
+  PROJECT_RULES.md                 # Optional
   README.md
   CURRENT.yaml
   fact_graph/
@@ -43,6 +96,7 @@ project/
     yyyy_mm_dd_roundNNN/
       PROBLEM.md
       ROUND.yaml
+      PROJECT_RULES_r01.md          # Fixed copy if project rules exist
       ROUTES.md
       CHECKPOINT.yaml
       code/R003P01/
@@ -73,6 +127,7 @@ project/
   out_papers/
     PAPER001/
       PAPER.md
+      PROJECT_RULES_r01.md          # Fixed copy if project rules exist
       INVENTORY.md
       pairs/
       src/
@@ -88,7 +143,7 @@ Keep the eight round-directory functions and the shared project fact graph.
 Empty directories are optional.
 Do not create empty proofs, reviews, PDFs, or future submission versions.
 
-Use stable identifiers such as these:
+Use stable identifiers for the objects in the table.
 
 | Object | Example |
 | --- | --- |
@@ -108,6 +163,10 @@ New rounds and paper tasks use new pair identifiers.
 During recovery within the same round, keep its pair identifiers.
 Inherited facts keep their original identifiers, revisions, and source references.
 
+During an active task, a replacement agent can take the same role with the same pair, history, and budget.
+Keep the assigned verifier through repairs. Never replace a verifier to obtain a different decision.
+Only the controller updates shared control files. Copy admission decisions exactly.
+
 An agent session identifier is only an additional reference.
 It does not replace the logical role or pair identifier.
 For historical evidence, refer to fixed records with their identifiers, versions, and actual paths.
@@ -117,21 +176,22 @@ They are not sufficient identifiers for fixed historical evidence.
 ## 2. Start a new round — controller
 
 A new round accepts only user requirements, `CURRENT.yaml`, the current fact graph, and the latest `final/` summary.
+Use the entry check in section 1. User requirements include the project rules that apply to this round.
 Do not read previous pair directories, submissions, reviews, drafts, or checkpoints to start a new round.
+
 Use section 9 to record a previous pause or resume an interrupted round.
 A pause entry alone does not make execution recovery necessary.
 Before new-round setup, complete any necessary confirmation from section 9.
 
 1. Read the user's target, limits, changes, and interruption report.
 2. If `CURRENT.yaml` is available, read it.
-3. Read the latest handoff in this order: `START_HERE.md`, `RESULT.yaml`, `PROBLEM.md`, then `FRONTIER.md`.
+3. In the latest handoff, read `START_HERE.md`, `RESULT.yaml`, `PROBLEM.md`, and `FRONTIER.md` in that order.
 4. Read the full fact records necessary for the current task.
 5. If the recovery conditions apply, use section 9 instead of the new-round steps below.
-6. Record the new round, exact target, adopted policy, and new budgets in the control files.
-7. Set `started_pair_ids` to `[]`.
-8. Record the fixed published input graph version. Do not copy a snapshot for each new round.
-9. If no graph exists, publish the initial project graph under section 6.
-10. Assign the literature task to the researcher.
+6. Record the new round, exact target, rules reference, exceptions, policy, and new budgets.
+7. If no graph exists, publish the initial project graph under section 6.
+8. Record the fixed published input graph version. A new round needs only a reference to this version.
+9. Assign the literature task to the researcher.
 
 If there is no earlier state, initialize the project records.
 An initial graph can contain no accepted results.
@@ -144,26 +204,43 @@ Create new pair identifiers, role assignments, and `TASK.md` records for this ro
 Start each pair's submission sequence at `v01`.
 Do not transfer previous pairs, pending reviews, or used submission counts into the new round.
 
-Use these record contents:
+Use the required contents for each record.
 
 | Record | Required information |
 | --- | --- |
 | `README.md` | Project purpose, rule locations, date and path conventions, adopted policy location, reading order, supplementary-paper rule, deferred features. No separate progress ledger. |
 | `CURRENT.yaml` | `project_id`, `current_round`, `current_fact_head`, `latest_handoff`. `current_fact_head` points to root `fact_graph/HEAD.yaml`. Fill paths only after targets exist. |
 | `PROBLEM.md` | Original question, exact target, identifier and revision, objects, quantifiers, ranges, hypotheses, conclusion, definition references, additional requests, uncertainties, changes. |
-| `ROUND.yaml` | Round identifier, creation time, previous round, target revision and path. Fixed input and output graphs, budgets, started pairs, policy, and user-instruction references. |
+| `ROUND.yaml` | Round identifier, creation time, previous round, target revision and path. Fixed input and output graphs, budgets, started pairs, policy, and user instructions. Include `project_rules_ref` and task exceptions. |
 | `ROUTES.md` | Route identifier, purpose, core method, sources, accepted inputs, distinguishing features, proof gaps, pair assignment, outcome, and stop reason. |
-| `CHECKPOINT.yaml` | Last full graph, submissions, completed reviews, pending reviews, accepted results awaiting entry, open requests, draft or code paths, next action. |
+| `CHECKPOINT.yaml` | Last full graph, submissions, completed and pending reviews, accepted results awaiting entry, open requests, draft or code paths, next action. Use the formal records as the basis. |
 
-Use `max_pairs`, `max_formal_submissions_per_pair`, and `started_pair_ids` for the budget fields.
-Record cumulative results, the approved partial-result scope, and project-level novelty in the policy.
-Count pairs and submissions within each round. Keep used counts through pauses and sessions in that round.
-Calculate counts from the current round's formal records.
-Do not maintain a second independent budget ledger.
+Keep the exact question and its hypotheses in `PROBLEM.md`.
+If the target changes, including through a new convention, save a new version such as `PROBLEM_r02.md`. Record the reason.
+Point `ROUND.yaml` to the version in use. Identify a restricted or weaker claim separately.
 
-If the target changes, save a new problem version such as `PROBLEM_r02.md`.
-Point `ROUND.yaml` to the version in use.
-Do not make the controller prove equivalence between target versions.
+Record explicit user assumptions with their scope. Other assertions need admission before use as established facts.
+Give necessary proofs of equivalence to a pair.
+
+### Set the research budget
+
+Apply the order in section 1 to permitted research limits and result policies.
+Record the adopted limits and result scope in `ROUND.yaml`. Section 8 gives the default result policy.
+
+| Field | Default for a new research round |
+| --- | --- |
+| `max_pairs` | 4 pairs. The round can use a limit of 3. A slot can remain available for later work. |
+| `max_formal_submissions_per_pair` | 4 submissions per pair, including the first submission and up to 3 repairs. |
+| `started_pair_ids` | Start with an empty list (`[]`). Add a pair when it starts proof or review work. |
+
+Count exploration, combination proofs, and separate lemma tasks against the pair limit.
+Completed and failed pairs use their slots even when work runs in sequence.
+Same-pair repairs and same-round recovery keep the original slot.
+Literature work, route planning, fact reads, and administrative recovery use no slots.
+
+Use section 5 to count formal submissions. Preserve used counts across pauses and sessions of the same round.
+If a count is unknown, determine it from formal records before using the remaining budget.
+Get explicit user agreement before exceeding an adopted research limit or starting automatic successive rounds.
 
 ## 3. Literature research — researcher
 
@@ -178,10 +255,11 @@ Do not make the controller prove equivalence between target versions.
 
 Search snippets are leads, not sufficient evidence for a full theorem.
 If the source is insufficient, keep the item as a lead.
-Do not accept conjectures or experimental observations as proved theorems.
+Distinguish definitions, local hypotheses, admitted theorems, conjectures, and experimental observations.
+
 For a proved claim, record its proof location or the proof source cited by the text.
-Proof locations are not necessary for definitions alone.
-This source check does not include a new proof of the result by the researcher.
+Definitions alone need no proof location. Claims of existence, uniqueness, or equivalence attached to a definition need evidence.
+Admission of a faithful extract requires neither a new proof nor a second verifier.
 
 Each source record contains its identifier, title, authors, year, link or document identifier, version, retrieval time, and access limits.
 If available, include the actual PDF path or a different location for source text.
@@ -191,7 +269,10 @@ Do not create placeholder PDFs.
 
 Notation changes must keep the mathematical meaning unchanged.
 Keep quantifier order, parameter ranges, norms, topology, regularity, uniformity, and constant dependencies unchanged.
-If a deduction is necessary for a change, submit the original fact with a request for a pair task.
+If a source uses another definition under the same name, retain the source definition and hypotheses.
+Before using the theorem, check that the current objects meet its hypotheses.
+If a hypothesis fails, give any proposed generalization to a pair as a new claim.
+If a change requires proof of equivalence or another condition, give the original fact and proof obligation to a pair.
 
 If a literature result directly settles the target, give a clear target correspondence record.
 The controller can then report the result without a proof pair.
@@ -200,7 +281,7 @@ Report an unsuccessful search only in its actual search scope.
 Do not claim global novelty from a search without a match alone.
 For a paper's originality claims, use the complete checks in section 11.
 
-When the user names supplementary papers, read only the requested material in `additional_papers/`.
+List, scan, or read `additional_papers/` only for material the user requests. Do not monitor this optional directory.
 Record actual use in `RESEARCH.md` and `SOURCES.yaml`.
 Keep the original user paths and filenames.
 The papers can stay at their original paths.
@@ -220,7 +301,7 @@ This route procedure applies to research rounds. For paper work, use the scopes 
 
 Shared background theorems do not make two routes identical.
 Keep proposed bridges and expected lemmas as unproved targets.
-For a different core method in an active route, count the new work as a new pair.
+If an active route changes its core method, count the new work as a new pair.
 Repairs to the same method stay in the existing pair.
 
 `TASK.md` identifies the pair, parent round or paper task, fixed roles, target, scope, and submission limit.
@@ -228,7 +309,12 @@ Include the input graph, permitted facts, expected output, constraints, and stop
 For research routes, add the route identifier, core method, distinguishing features, and proof gaps.
 Do not invent proof routes for inventory, originality, manuscript, or presentation work.
 Keep a record of material changes to the task.
-Do not distribute another pair's unaccepted proof as an input.
+
+Pairs can share admitted facts, source requests, candidate claims, method outlines, and administrative progress.
+Keep unaccepted proof text within its pair and the controller's administrative scope.
+A different pair can take a candidate claim as a target. It needs admission before use as a premise.
+Assign connecting arguments within the original scope and budget, or use an available pair.
+Changes to paper structure or language stay within the assigned paper task.
 
 ## 5. Submit and review — worker and verifier
 
@@ -255,19 +341,41 @@ For a specific proof or method, identify the exact support version or fixed proo
 For repairs, record the response to each review defect and the effect of the change.
 Do not edit a fixed submission during review.
 
+For existing premises, use permitted, available graph facts with applicable support.
+Record basic logic and project conventions without a separate fact for each arithmetic step.
+Model memory, route plans, and unaccepted drafts cannot supply established premises.
+
+A worker can prove a local claim inside its argument. Other tasks need its admission before use.
+A summary cannot supply the proof.
+To establish `T` from `L ⇒ T`, supply accepted support for `L`.
+
+Identify the conclusion, proof, or method that each restriction covers.
+Check whether the restriction includes indirect dependencies. Check whether it permits an independent proof.
+If a restriction covers a proof, method, or indirect dependency, identify the exact support version you use.
+If one proof is forbidden, use another admitted proof only if it meets the restrictions.
+If the conclusion itself is forbidden, no proof of it permits its use within that scope.
+
 ### Verifier procedure
 
 Examine only your fixed worker's submission. For paper reports, examine the assigned report and its evidence.
 
 1. Read the fixed submission of your assigned worker and its exact dependencies.
 2. Examine the claim against the target and all hypotheses.
-3. Examine fact availability, versions, and applicability.
+3. Examine fact availability, versions, and applicability under the fixed rules and task exceptions.
 4. Examine each necessary deduction for gaps and circular support.
 5. Examine quantifiers, constant dependencies, uniformity, and applicable boundary cases.
 6. If the argument uses computation, examine computational coverage and precision.
 7. For a counterexample, examine the original hypotheses and the failure of the original conclusion.
 8. Examine `PROOF_IDEA.md` against section 12.
 9. Write `reviews/vNN/REVIEW.md` for that exact submission.
+
+For restrictions on proofs, methods, or indirect dependencies, examine the selected support version and the dependency chain in scope.
+For indirect dependencies in scope, check the selected support's fixed proof and its source when necessary.
+If the fact graph has no record of a dependency, do not assume that the dependency is absent.
+If you cannot verify a relevant dependency, do not treat this support as meeting the task restriction.
+
+If the worker claims a permitted independent proof, examine the deductions that establish its independence.
+Send a new deduction from review to the worker for formal submission.
 
 The review records the verifier, pair, submission version, paths, scope, decision, and reasons.
 Use the review decisions `ACCEPT`, `REWORK`, or `INCOMPLETE`.
@@ -277,7 +385,7 @@ List exact accepted claims, their dependencies, target coverage, rejected steps,
 With a full basis and a clear scope, accept an independent local result.
 A request for repairs to the whole proof does not cancel that local acceptance.
 Record mathematical admission, proof-idea checks, and required paper checks separately.
-An unfinished explanation or originality check does not cancel explicit mathematical admission.
+Keep explicit mathematical admission and established result status when a required explanation or originality check is incomplete.
 If a required check is incomplete, the affected delivery remains incomplete.
 
 Use necessary recalculation or diagnostic counterexamples for review.
@@ -286,16 +394,17 @@ For subsequent submissions, reuse checks of unchanged, unaffected parts.
 Give a decision for the current version.
 
 Complete the review of the last permitted submission before applying the limit.
-At the limit, stop further submissions. Research pairs use their round policy; paper pairs use section 10.
+At the limit, stop further submissions. Research pairs use their round policy. Paper pairs use section 10.
 Keep accepted local results and the remaining obligations.
+
 For correction of a completed review, keep the previous report. Add a clear correction.
 
 ### Count formal submissions
 
 Use the same counting rules for rounds and paper tasks, with their respective limits.
 Count one submission when a fixed version reaches the fixed verifier for a formal decision.
-Count at delivery, not acceptance. Count each pair separately from its formal records.
-One delivery can cover several claims and defects; do not count them separately.
+Count at delivery, regardless of the decision. Use each pair's formal records as its only count.
+One delivery counts once even if it covers several claims or defects.
 
 Draft exchanges, source searches, language edits, formatting, and compilation alone do not increase counts.
 A report sent for a formal decision does count.
@@ -335,11 +444,14 @@ Use or claims of a particular proof, construction, or method also identify its s
 
 A new proof of an existing fact needs new support admitted through `DERIVED`.
 Other valid support for the fact does not establish that proof.
+Task restrictions govern use of evidence. Preserve the fact's admission and its historical support records.
 
 If one support fails, retain another accepted, applicable support for the exact statement.
 Stop affected support and dependent results without valid applicable support.
+A defective proof does not by itself refute the claim.
+
 Send new mathematical judgments to the researcher or fixed pair. Do not decide them as controller.
-Circular dependencies cannot establish a proof; joint induction needs an admitted complete argument.
+Circular dependencies cannot establish a proof. Joint induction needs an admitted complete argument.
 
 1. Examine the identity and exact scope of admission decisions.
 2. Save new fact and support versions.
@@ -432,8 +544,10 @@ For a computation used as evidence, keep fixed code, inputs, and outputs in `cod
 In `RUN.yaml`, record the run, pair, submission, purpose, command, environment, dependency versions, input method, output paths, and limitations.
 When applicable, record random seeds.
 Keep exploratory observations separate from proof claims.
+
 The worker supplies the mathematical justification for exhaustive search, exact arithmetic, or rigorous numerical bounds.
 The verifier reviews that justification.
+Successful execution or PDF compilation alone cannot establish a mathematical claim.
 
 For a requested paper, use `src/main.tex`, `references.bib`, and `CLAIMS.yaml`.
 Map paper labels to exact fact versions and proof locations in `CLAIMS.yaml`.
@@ -462,11 +576,37 @@ Keep unaffected facts available.
 If a new mathematical judgment is necessary, assign it to a pair in budget.
 If an accepted literature counterexample directly refutes the target, record `DISPROVED` instead of an unresolved conflict.
 
+Keep issue types separate from mathematical results. Record inconsistent hypotheses.
+A proof gap alone does not show a missing specification.
+Stop only the affected work. Keep unresolved target information explicit.
+
 ## 8. Complete a round — controller
 
-Complete the round for one of these reasons: a settled target, completed tasks, exhausted budget, or an agreed boundary.
+### Determine the mathematical result
+
+By default, assess cumulative progress for the exact target version. List this round's new results separately.
+Count a result as new to the project when the project derives it and admits it.
+For claims of originality in a paper, use section 11.
+
+| Result | Required evidence |
+| --- | --- |
+| `PROVED` | An admitted proof or an exact literature result establishes the original target. |
+| `DISPROVED` | An admitted refutation applies. A counterexample must satisfy the original hypotheses and violate the conclusion. |
+| `PARTIALLY_RESOLVED` | The target remains open. At least one admitted project result satisfies the partial-result policy. |
+| `UNRESOLVED` | The target remains open. No admitted project result satisfies the partial-result policy. |
+
+Partial results include a restricted result, a substantial lemma, a weaker conclusion, or a result for some parameter values.
+A rigorous reduction can also qualify. State any extra hypotheses.
+
+If the result status is unknown, omit `result_status`. Record the missing evidence.
+Proof failure, budget exhaustion, and an unsuccessful search do not establish proof or refutation.
+Report progress on extra requests separately, including a new proof under method restrictions or a stronger result.
+
+### Prepare the handoff
+
+Complete the round when you settle the target, finish the tasks, exhaust the budget, or reach an agreed boundary.
 Pair or formal submission budget exhaustion is not an interruption.
-An external platform usage limit can interrupt execution; use section 9 in that case.
+If an external platform usage limit interrupts execution, use section 9.
 Unresolved specifications or conflicts can also end the affected work with a clear explanation.
 For completion without interruption, use only necessary pair slots and actual outputs. A paper or PDF is optional.
 
@@ -491,7 +631,7 @@ For completion without interruption, use only necessary pair slots and actual ou
 | `FACTS.ref.yaml` | Fixed source graph identifier and project-relative manifest path. |
 | `FRONTIER.md` | Open proof obligations, route outcomes, accepted partial results and conditions, failed steps, source requests, issues, and candidate targets. |
 
-For known information in `RESULT.yaml`, use these fields:
+Use the following fields for known information in `RESULT.yaml`.
 
 - `record_type: ROUND_END`, `round_id`, target identifier and revision, and `recorded_at`.
 - `result_status`, `result_scope`, `basis_fact_ids`, and evidence locations.
@@ -513,12 +653,14 @@ During research, read cited evidence beyond `final/` only for a specific source 
 Before future use of a historical fact, examine its current availability through `CURRENT.yaml`.
 
 Keep failed proofs, rejected submissions, reviews, graph versions, and drafts necessary for recovery.
+Preserve code necessary for review or computation.
 Do not delete user papers as temporary material.
 Do not start a new round without the user's instruction or an existing agreement.
 
 ## 9. Pause and recover — controller
 
 This section applies only to research rounds. Paper integration has no execution-recovery procedure.
+For a request to resume research, first complete the entry check in section 1.
 `PAUSE` is the only `run_status` value. Omit `run_status` during ordinary work and completion without interruption.
 Keep established mathematical results when a pause occurs.
 
@@ -531,7 +673,7 @@ Keep established mathematical results when a pause occurs.
 Record the round, `run_status: PAUSE`, trigger, actual record time, and handoff completeness.
 Include known results, their evidence, the last reliable graph, pending work, exact versions, used submissions, missing files, and next action.
 If a value is unknown, do not include its field. Record the missing information.
-Do not wait for unfinished work or a full five-file handoff.
+Do not wait for unfinished proofs, reviews, a full handoff, a PDF, or cleanup.
 
 ### Add an earlier pause entry
 
@@ -569,7 +711,7 @@ After you ask, wait for the user's choice before execution recovery or new-round
 
 ### Resume the interrupted round
 
-Recover execution records only when both conditions hold:
+Recover execution records only when both conditions hold.
 
 - The latest applicable pause record or the user's report identifies the previous round as interrupted.
 - The current task is to continue that same round.
@@ -577,6 +719,7 @@ Recover execution records only when both conditions hold:
 After any necessary confirmation, use section 2 for a requested new round with new pairs and budgets.
 If the intended round is unclear, ask the user before you read execution records.
 During recovery, read only the interrupted round's execution records.
+Apply the fixed rules and any explicit changes under section 1 before resuming the work.
 
 1. Locate the last full, identifiable target and graph versions.
 2. Recover literature admissions and completed verifier decisions from formal records.
@@ -584,7 +727,7 @@ During recovery, read only the interrupted round's execution records.
 4. Separate accepted facts, pending drafts, and incomplete files.
 5. Restore accepted results that only lack mechanical graph entry.
 6. Continue in the existing round and pair directories.
-7. Before research continues, save the recovery basis.
+7. Before research continues, record the recovery basis in `audit/`.
 
 Keep the original round identifier, pair identities, fixed roles, used pair slots, and submission counts.
 Continued review of `v03` is review of `v03`.
@@ -601,7 +744,7 @@ Recovery alone does not make another independent reviewer or new proofs of liter
 
 ## 10. Integrate a paper — controller and fixed pairs
 
-Start this task when the user requests a paper from accumulated results.
+When the user requests a paper from accumulated results, start with the entry check in section 1.
 If the user requests only analysis, stop after the inventory and topic proposals.
 Examine all results in scope before selecting a coherent paper topic and its contents.
 
@@ -611,7 +754,10 @@ Do not put every result in the paper. Record the disposition of omitted results.
 Create `out_papers/PAPER001/` at the project root, beside `rounds/` and `additional_papers/`.
 Use a new paper task identifier, pairs, and budget. Do not increase the round number.
 Do not change `CURRENT.yaml.current_round` or the research `latest_handoff`.
+
 Unless the user limits the scope, examine all results available when the task starts.
+Use the current project rules for each new paper task, including a new request after an interruption.
+Identify restricted results or proofs in the inventory. Cover all results in the requested scope.
 
 Read graph records, round handoffs, papers, and cited proofs as evidence, not as execution recovery.
 Do not add a previous research pause because paper integration starts.
@@ -620,15 +766,15 @@ Get admission for omitted mathematical results before use as established facts.
 
 | Record | Contents |
 | --- | --- |
-| `PAPER.md` | User request, scope, topic, fixed input and output graphs. Original target version and mathematical result. Delivery progress, budget summary, and open items. |
+| `PAPER.md` | User request, scope, topic, fixed input and output graphs. Original target version and mathematical result. Record `project_rules_ref`, task exceptions, delivery progress, budget summary, and open items. |
 | `INVENTORY.md` | Result identifiers, sources, admission states, topic groups, inclusion decisions, and reasons. Contribution claims and references to originality decisions. |
 | `pairs/` | Tasks, drafts, fixed submissions with `PROOF_IDEA.md`, and fixed reviews. |
 | `src/` | `main.tex`, `references.bib`, and `CLAIMS.yaml`. Exact facts, proof locations, and support versions for proof or method claims. |
 | `out/` | `paper.pdf` and `BUILD.yaml`, with fixed sources, graph version, command, build time, and tools. |
 
 Use 6 pairs by default, with a cumulative maximum of 8 for the task.
-Schedule pairs by their work dependencies; they need not run together.
-These limits include the first formal submission:
+Schedule pairs according to their work dependencies. They can run at different times.
+Each limit in the table includes the first formal submission.
 
 | Work | Pairs | Submissions per pair |
 | --- | --- | --- |
@@ -673,6 +819,7 @@ The presentation pair reads admitted mathematics and its evidence. Send new dedu
 10. Send the fixed complete manuscript to the main verifier.
 11. Build the delivery PDF from the reviewed fixed sources.
 12. Examine source and PDF consistency before delivery.
+13. Deliver the reviewed paper and its supporting records.
 
 Start originality work after topic and contribution selection, not after the whole manuscript is complete.
 Use the outcomes to revise content and contribution claims.
@@ -693,7 +840,7 @@ Review changed content within the remaining budget. Scope reduction does not rem
 
 Review the last permitted submission. If it fails, stop further submissions from that pair.
 Other pairs can continue work that does not depend on the failed item.
-You can omit a nonessential failed result; the changed manuscript still needs review within budget.
+If you omit a nonessential failed result, the changed manuscript still needs review within budget.
 
 If a core defect or required check remains open, record delivery as incomplete with the specific reason.
 Retain admitted mathematics, existing files, used counts, and review outcomes.
@@ -741,7 +888,7 @@ For standard tools, examine attribution and applicability.
 Claims such as "first", "earliest", or "only known method" need a separate priority check.
 Mathematical uniqueness uses ordinary proof and admission, not a literature priority check.
 
-Cover these source types for main contributions:
+For main contributions, include the following source types in the search.
 
 - Mathematical indexes, such as zbMATH Open or accessible MathSciNet.
 - Preprints and updates, such as arXiv, author pages, revisions, and corrections.
@@ -761,9 +908,9 @@ An objection must identify a source, a possible equivalence or derivation, or a 
 A concrete lead can trigger a focused check before a full overlap proof exists.
 To confirm overlap, give exact source locations and mathematical coverage evidence.
 
-The originality worker supplies necessary new arguments; its fixed verifier reviews them.
+The originality worker supplies necessary new arguments. Its fixed verifier reviews them.
 The verifier can suggest a lead, but cannot admit its own unreviewed deduction.
-New usable equivalence results or reductions still need `DERIVED` admission; originality is not a third channel.
+New equivalence results or reductions need `DERIVED` admission before use.
 
 An implication `A ⇒ B` establishes a mathematical relation, not the absence of all contribution.
 Examine what the new argument, method, or connection adds.
@@ -772,7 +919,7 @@ For a known result with a different proof, examine the claimed proof or method c
 Examine actual changes to hypotheses, ranges, bounds, and conclusions.
 Failure to prove overlap does not itself prove originality.
 
-For each contribution, complete these checks:
+Complete the following checks for each contribution.
 
 1. State the exact claim and proposed originality type.
 2. Cover applicable source types and principal statement variants.
@@ -780,15 +927,15 @@ For each contribution, complete these checks:
 4. Resolve concrete overlap doubts and record the basis.
 
 Resolution can confirm overlap and change the contribution claim.
-Start with an initial search; use focused follow-up for specific gaps.
+After the initial search, search again for specific gaps.
 When these checks are complete and no new leads remain, stop general searches.
 Time, search counts, and exhausted budgets cannot replace completion of the checks.
 
 | Finding | Action |
 | --- | --- |
 | Earlier work covers the result | Cite it and revise the contribution claim. |
-| Checks complete; no coverage found; concrete doubts resolved | Permit a normal originality claim for the examined contribution. |
-| A consequential doubt remains | Identify missing evidence. Keep that originality claim open; do not call it confirmed new work. |
+| All checks are complete. No source examined covers the claimed contribution. All concrete doubts have an answer. | Permit a normal originality claim for the examined contribution. |
+| A consequential doubt remains | Identify the missing evidence. Keep that originality claim open. |
 
 A search with no match alone does not establish originality.
 After complete checks, unknown literature in the abstract must not prevent a decision or cause endless searches.
@@ -809,7 +956,7 @@ Unresolved originality does not cancel mathematical admission, but can prevent c
 ## 12. Proof ideas for human readers
 
 Each research or paper pair must include `PROOF_IDEA.md` with every formal submission.
-The worker writes it; the fixed verifier examines it.
+The worker writes the explanation. Its fixed verifier examines it.
 Use the same `submissions/vNN/` directory as the submitted argument or report.
 Keep the file fixed with that version. For changes sent for another decision, use a new version and count.
 
