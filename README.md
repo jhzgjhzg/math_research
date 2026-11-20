@@ -1,8 +1,8 @@
 # Math Research
 
-Version: **0.3.1**
+Version: **0.4.0**
 
-Use these instructions with Codex to run mathematical research rounds or prepare a paper from accumulated results.
+Use these instructions with Codex to run mathematical research rounds, review alternative routes, or prepare a paper from accumulated results.
 
 | Language | Required project entry | Required research skill | Optional project rules template |
 | --- | --- | --- | --- |
@@ -18,7 +18,7 @@ Use these instructions with Codex to run mathematical research rounds or prepare
 5. To create a project model file, copy the shared JSON template beside `AGENTS.md`. [SUBAGENT_MODELS.json](SUBAGENT_MODELS.json)
 
 When you update the skill, update the project entry in each project that uses it.
-The controller checks both files before a new round, same-round recovery, or paper integration.
+The controller checks both files before a new round, same-round recovery, paper integration, or a route review.
 If the check fails, use the reported paths to replace the affected files with copies from the same release.
 Start the task again to repeat the check. Editing version numbers alone does not update the instructions.
 
@@ -33,6 +33,14 @@ A native Codex agent file can override a launch setting. Keep its settings consi
 
 On a configuration error, the controller pauses the entire research round and reports the cause.
 After correction, ask to resume that round with the corrected settings. For an incomplete paper task, request a new integration.
+For a route review, the controller stops the review and its active researchers, keeps completed work, and reports the cause.
+
+## Request a route review
+
+Ask for alternative ways to prove or disprove the original claim. Two researchers first develop independent proposals.
+The controller can assign a third researcher to search the literature or explore another approach.
+Each review has its own directory. For example, `route_reviews/REVIEW001/REVIEW001.md` contains the summary and links to the researchers' records.
+To use a proposal in a new round, cite the review and, if applicable, its route number.
 
 ## Write project rules
 
@@ -43,4 +51,4 @@ Include exceptions and source references where applicable. The following example
 - **Proof restriction.** For target T, exclude the published proof of theorem A and arguments that depend on that proof. A new proof of A from the project hypotheses is permitted. Use it after mathematical admission.
 
 For an exception limited to one task, give the exception in that task's request.
-New rounds and new paper tasks use the current project rules. An interrupted round resumes with its recorded rules by default.
+New rounds, paper tasks, and route reviews use the current project rules. An interrupted round resumes with its recorded rules by default.

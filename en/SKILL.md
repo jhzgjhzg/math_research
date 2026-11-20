@@ -1,15 +1,16 @@
 ---
 name: math-research
-description: Run a mathematical research round, resume an interrupted round, or integrate project results into a paper. Requires the project AGENTS.md from the same release.
+description: Start a mathematical research round or resume an interrupted round. Integrate project results into a paper or review other ways to prove or disprove the original claim. Requires the project AGENTS.md from the same release.
 metadata:
-  version: "0.3.1"
+  version: "0.4.0"
 ---
 
 # Mathematical research procedure
 
 ## 1. Entry and project layout
 
-Read this skill and the research project's root `AGENTS.md` before a new round, research recovery, or paper integration.
+Read this skill and the research project's root `AGENTS.md` before a new round, paper task, or route review.
+Do the same before you resume an interrupted round.
 Editing these files does not start a research task.
 
 ### Compare the release numbers
@@ -29,11 +30,14 @@ Leave both files intact during this check. A change to a version label alone doe
 Use the actual files as evidence. Memory, skill listings, and the latest online release cannot establish a match.
 
 After a match, apply the other entry conditions for the requested task.
-Use section 2 for a new round, section 9 for research recovery, or section 10 for paper integration.
+Use section 2 for a new round or section 9 to resume an interrupted round.
+Use section 10 for paper integration or section 13 for a route review.
 
 ### Apply project rules
 
-For a new round or paper task, locate `PROJECT_RULES.md` in the research project root after any required confirmation.
+For a new round, paper task, or route review, first obtain any required confirmation.
+Then look for `PROJECT_RULES.md` in the research project root.
+
 If the file exists, read it before task setup.
 If the file is absent, use the user's instructions and the usual defaults.
 If it exists but you cannot read it, report its path. Wait for readable rules before you start the task.
@@ -45,7 +49,8 @@ Distinguish requirements from preferences. Report the specific clauses that conf
 Ask the user only if an unresolved conflict affects the task.
 Keep the release check, fixed review, mathematical admission, and submission counting rules in force.
 
-During task setup, record the rules as follows.
+For a route review, give each researcher the applicable clauses and task exceptions.
+For a new round or paper task, record the rules as follows.
 
 1. If the root file exists, save its exact text as `PROJECT_RULES_r01.md` in the task directory.
 2. Set `project_rules_ref` to the project-relative path of that fixed copy, or to `null` for confirmed absence.
@@ -61,7 +66,7 @@ Report any addition, change, or removal of the root file since that record.
 If an older round has no rules record, examine that round's recorded user requirements.
 Ask the user if a condition essential to the task remains unknown.
 
-If the user explicitly changes the rules for active work, keep the previous references and exceptions.
+If the user explicitly changes the rules for an active round or paper task, keep the previous references and exceptions.
 Record the change, its scope, and the work from which it applies.
 
 Save new text in the next fixed copy, such as `PROJECT_RULES_r02.md`. Update `project_rules_ref` in the task record.
@@ -93,6 +98,13 @@ project/
     supports/S0017/r1.json
     graphs/G0008.json
   additional_papers/
+  route_reviews/
+    REVIEW001/
+      REVIEW001.md
+      researchers/
+        RESEARCHER01.md
+        RESEARCHER02.md
+        RESEARCHER03.md            # Only if the third researcher participates
   rounds/
     yyyy_mm_dd_roundNNN/
       PROBLEM.md
@@ -156,6 +168,7 @@ Use stable identifiers for the objects in the table.
 | Support and revision | `S0017@r1` |
 | Project graph | `G0008` |
 | Paper task and pair | `PAPER001`, `PAPER001P01` |
+| Route review | `REVIEW001` |
 | Literature source | `L001` |
 | Computation run | `R003P01/E001` |
 
@@ -178,7 +191,7 @@ They are not sufficient identifiers for fixed historical evidence.
 
 A new round accepts only user requirements, `CURRENT.yaml`, the current fact graph, and the latest `final/` summary.
 Use the entry check in section 1. User requirements include this round's project rules and subagent settings.
-Do not read previous pair directories, submissions, reviews, drafts, or checkpoints to start a new round.
+Do not read previous pair directories, submissions, verifier reviews, drafts, or checkpoints to start a new round.
 
 Use section 9 to record a previous pause or resume an interrupted round.
 A pause entry alone does not make execution recovery necessary.
@@ -224,6 +237,23 @@ Point `ROUND.yaml` to the version in use. Identify a restricted or weaker claim 
 Record explicit user assumptions with their scope. Other assertions need admission before use as established facts.
 Give necessary proofs of equivalence to a pair.
 
+### Use a route review that the user cites
+
+When the user does not cite a review, skip `route_reviews/` at the start of a new round.
+If the user explicitly cites a review or one of its routes, read its summary as part of the request.
+For example, route 2 of `REVIEW001` refers to `route_reviews/REVIEW001/REVIEW001.md`.
+Read the completion note and any corrections for the original route number.
+Read an individual researcher record only if the user explicitly requests that record.
+
+Select routes that fit the current target, project restrictions, and current fact graph.
+For each route you select, record the review identifier and route number in this round's `ROUTES.md`.
+Treat proposed routes as leads. An unadmitted claim cannot serve as an established premise.
+
+Use `LITERATURE` for eligible source extracts under section 3.
+If an admitted extract settles the exact target, record how its statement and conditions match the target.
+That result needs no separate proof pair.
+Send new deductions to a fixed pair for `DERIVED` admission under section 5.
+
 ### Set the research budget
 
 Apply the order in section 1 to permitted research limits and result policies.
@@ -245,6 +275,8 @@ If a count is unknown, determine it from formal records before using the remaini
 Get explicit user agreement before exceeding an adopted research limit or starting automatic successive rounds.
 
 ## 3. Literature research — researcher
+
+For literature leads during a route review, use section 13. Use the procedure below for admission in rounds or paper tasks.
 
 1. Search for previous results, limits, counterexamples, corrections, and open directions.
 2. Read the source text and the context necessary for each result.
@@ -762,7 +794,7 @@ Recovery alone does not make another independent reviewer or new proofs of liter
 ## 10. Integrate a paper — controller and fixed pairs
 
 When the user requests a paper from accumulated results, start with the entry check in section 1.
-If the user requests only analysis, stop after the inventory and topic proposals.
+If the user requests only an analysis of accumulated results, stop after the inventory and topic proposals.
 Examine all results in scope before selecting a coherent paper topic and its contents.
 
 The original problem can remain open. Substantial partial results can support a separate paper.
@@ -1010,3 +1042,90 @@ Required explanation work still controls delivery completion and uses the task's
 If the budget is exhausted, retain the admitted result and record the unfinished explanation without adding submissions automatically.
 Readability cannot replace a full proof.
 The verifier need not establish that humans would choose this route or that every other route fails.
+
+## 13. Review possible research routes — controller and researchers
+
+When the user requests alternative ways to prove or disprove the original claim, start a separate route review.
+Use the entry check and the current project rules in section 1.
+Propose routes only. Leave proofs, counterexample verification, and mathematical admission to formal research.
+A route review uses no research round number, pair slot, or formal submission.
+
+### Set up the review — controller
+
+Use the next review number in the project, even if two reviews follow the same round.
+Write the review files in their own directory, such as `route_reviews/REVIEW001/`.
+You can read `CURRENT.yaml`, earlier route records, `final/` handoffs, and the project fact graph to organize the review.
+Treat all these inputs as read-only.
+
+Start the summary in a file with the review identifier as its name, such as `REVIEW001.md`.
+Record the review date, original claim and version, applicable restrictions, and the version of any fact graph you use.
+Before the first researcher starts, read and validate the project root `SUBAGENT_MODELS.json` if present.
+Use the field priorities and launch rules in `AGENTS.md` for the `researcher` role.
+
+In the summary, identify each participant record as received, unfinished, or missing. State whether the summary is complete.
+If work stops or a participant cannot finish, keep the available material. Record what is missing and why, where known.
+Complete the summary only after you receive the finished records from all participants.
+
+### Assign the researchers — controller
+
+Assign two researchers by default. Use at most three.
+Start the first two in fresh contexts with `fork_turns: "none"`. Neither researcher inherits your conversation.
+Give both the same starting material. Specify what they may read for the first draft.
+
+- Include the original claim and its version, the definitions, the user's instructions, and the applicable project restrictions and exceptions.
+- Include the necessary admitted facts with their versions.
+- Exclude earlier routes, assessments of those routes, and other participants' views from the material you supply.
+
+Each researcher uses only this material to propose routes and save an independent draft in its own record.
+Wait until both save their drafts before sharing the designated historical material and participant records for comparison.
+
+If you identify a separate search question or another approach, you can assign a third researcher.
+The third researcher can start with the others or after the first drafts.
+This researcher can search the literature, propose routes, or do both.
+A search can cover recent papers, results under other terms, or known counterexamples.
+
+For an independent opinion, use the same fresh context setting, starting material, and reading limits.
+That researcher must also save its own draft before it sees comparison material.
+For a proposal about a known obstacle, give the researcher the specific obstacle.
+
+### Write your record — researcher
+
+Write your own file in `researchers/`, as shown in section 1. Create the third record only if the third researcher participates.
+Start with your assignment and the material you received. Identify the claim and restrictions for independent work.
+For work on a known obstacle, state the question the controller gave you.
+
+- Give each proposed route a title that identifies its method. State what you hope to prove or where to look for a counterexample.
+- Describe the construction, reduction, or special case you would try. Give a concrete mathematical observation or source that suggests it.
+- State the necessary conditions. Give versions for admitted facts and identify steps that still need proof.
+  Name the main obstacle and the first check that could show whether the route is worth further work.
+- For a literature search, state the question. Give the authors, title, and a specific location such as a theorem number, page, or link.
+  Explain which result or method could apply and how its conditions compare with the claim's conditions.
+  A researcher assigned only a search can report just these findings after the opening.
+
+Keep new source results as literature leads and new deductions as proposals for verification.
+If you find no useful new lead, record the directions you examined and the obstacle you found.
+After comparison, append any change of opinion. Identify the affected route and the material that changed your assessment.
+Keep the independent draft intact.
+
+### Complete the summary — controller
+
+Write a summary that readers can use without opening the individual records. Keep the completion note and list the rounds compared.
+Briefly describe earlier methods and their main obstacles.
+Compare proposals with the relevant rounds' `ROUTES.md`, `final/FRONTIER.md`, and admitted facts.
+Use the core method and key obstacle to identify overlap.
+
+Give each candidate route a stable number within the summary and a short title. For each route, include the following information.
+
+- State what the route could prove or disprove. Give the proposed method and the reason to try it.
+- Identify the related earlier route and the key difference. You can combine proposals with the same method and obstacle.
+  Link to the relevant section in each contributor's record.
+- Give the relevant fact versions or source locations in the summary. Distinguish admitted facts, literature leads, and unverified proposals.
+- Identify the open step and the first useful check. If researchers disagree, give the reasons for each view.
+  When available, describe a check that could distinguish those views.
+
+If a comparison requires an unadmitted equivalence, implication, or impossibility claim, leave that judgment open.
+Do not prove or decide a new claim to combine routes or settle a disagreement.
+If all proposals repeat earlier routes, report the overlap and the remaining obstacle.
+
+After delivery, append corrections to the summary. Give the date, reason, and affected route numbers for each correction.
+Preserve the original text and route numbers. For use in a new round, follow section 2.
