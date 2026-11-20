@@ -1,8 +1,9 @@
 # Math Research
 
-Version: **0.4.0**
+Version: **0.5.0**
 
 Use these instructions with Codex to run mathematical research rounds, review alternative routes, or prepare a paper from accumulated results.
+You can also register ideas, proof drafts, and unpublished manuscripts for use in these tasks.
 
 | Language | Required project entry | Required research skill | Optional project rules template |
 | --- | --- | --- | --- |
@@ -18,7 +19,7 @@ Use these instructions with Codex to run mathematical research rounds, review al
 5. To create a project model file, copy the shared JSON template beside `AGENTS.md`. [SUBAGENT_MODELS.json](SUBAGENT_MODELS.json)
 
 When you update the skill, update the project entry in each project that uses it.
-The controller checks both files before a new round, same-round recovery, paper integration, or a route review.
+The controller checks both files before each research round, recovery, paper task, route review, or material update.
 If the check fails, use the reported paths to replace the affected files with copies from the same release.
 Start the task again to repeat the check. Editing version numbers alone does not update the instructions.
 
@@ -42,6 +43,20 @@ The controller can assign a third researcher to search the literature or explore
 Each review has its own directory. For example, `route_reviews/REVIEW001/REVIEW001.md` contains the summary and links to the researchers' records.
 To use a proposal in a new round, cite the review and, if applicable, its route number.
 
+## Use contributed material
+
+1. Put your manuscript in the project's `human/` directory. Keep your own filename.
+2. Ask, “Register `human/notes.md` for project research only.” The controller runs a separate material update and reports the item identifier.
+3. Use that identifier in a later request, for example, “In the next round, try the induction in `H007`.”
+
+`human/STATUS.md` gives the registered versions, use history, retry conditions, and permitted uses.
+Use `H007@r1` to select a specific revision. A request for `H007` selects the latest fully registered revision.
+You can also request the update and the next research task together. The controller completes the update first.
+For an unpublished manuscript, specify any permission for public use and how to credit the author.
+
+For lasting writing preferences, use the optional project file `TASTE.md`. For example, “In a paper, explain what the key substitution removes.”
+The controller gives applicable preferences to writers and reviewers before they start this work.
+
 ## Write project rules
 
 Maintain the root `PROJECT_RULES.md` independently of the release. Each rule needs a scope and a requirement.
@@ -51,4 +66,5 @@ Include exceptions and source references where applicable. The following example
 - **Proof restriction.** For target T, exclude the published proof of theorem A and arguments that depend on that proof. A new proof of A from the project hypotheses is permitted. Use it after mathematical admission.
 
 For an exception limited to one task, give the exception in that task's request.
-New rounds, paper tasks, and route reviews use the current project rules. An interrupted round resumes with its recorded rules by default.
+New rounds, paper tasks, route reviews, and material updates use the current project rules.
+An interrupted round resumes with its recorded rules by default.

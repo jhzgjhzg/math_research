@@ -1,16 +1,16 @@
 ---
 name: math-research
-description: Start a mathematical research round or resume an interrupted round. Integrate project results into a paper or review other ways to prove or disprove the original claim. Requires the project AGENTS.md from the same release.
+description: Start a mathematical research round or resume an interrupted round. Integrate results into a paper or review other ways to prove or disprove the original claim. Update the register of contributed material. Use the project AGENTS.md from the same release.
 metadata:
-  version: "0.4.0"
+  version: "0.5.0"
 ---
 
 # Mathematical research procedure
 
 ## 1. Entry and project layout
 
-Read this skill and the research project's root `AGENTS.md` before a new round, paper task, or route review.
-Do the same before you resume an interrupted round.
+Before each task, read this skill and the research project's root `AGENTS.md`.
+This applies to new rounds, same-round recovery, paper tasks, route reviews, and material updates.
 Editing these files does not start a research task.
 
 ### Compare the release numbers
@@ -32,10 +32,36 @@ Use the actual files as evidence. Memory, skill listings, and the latest online 
 After a match, apply the other entry conditions for the requested task.
 Use section 2 for a new round or section 9 to resume an interrupted round.
 Use section 10 for paper integration or section 13 for a route review.
+Use section 14 for a request to update the register of contributed material.
+
+If the user requests an update and a subsequent research round, review, or paper, complete the separate update first.
+Then apply the entry checks for the requested task. An update alone ends with its change summary.
+
+### When the user requests contributed material
+
+The project register for ideas, proof drafts, and unpublished manuscripts is `human/STATUS.md`.
+In rounds, route reviews, and papers, take items from `human/` as new input only on an explicit user request.
+Section 10 also requires a source check for papers that use results from contributed material.
+
+If the user requests `human/` or an item from it for one of these tasks, first look for `human/STATUS.md`.
+For a new task, do this before you create task records, assign pairs, or start subagents.
+If the register is missing, stop the entire task. Report the actual missing path and tell the user to request a separate material update.
+
+If this happens during an active task, also send stop requests to its active subagents.
+Keep completed work, fixed versions, and the budget already used.
+For a research round, record `PAUSE` under section 9.
+For a paper or review, mark the delivery or summary incomplete in its task record.
+
+For a request to use all of `human/`, consider only entries with completed registration.
+For a named item, title, or manuscript, read only the corresponding register section.
+Read the fixed manuscript if you need its meaning, conditions, or proof details.
+Without a specified version, use the latest fully registered version of that item.
+Complete a separate update before you use a requested version with incomplete or missing registration.
+Routine research, reviews, and paper tasks do not scan the manuscripts in `human/`.
 
 ### Apply project rules
 
-For a new round, paper task, or route review, first obtain any required confirmation.
+For a new round, paper task, route review, or material update, first obtain any required confirmation.
 Then look for `PROJECT_RULES.md` in the research project root.
 
 If the file exists, read it before task setup.
@@ -73,6 +99,19 @@ Save new text in the next fixed copy, such as `PROJECT_RULES_r02.md`. Update `pr
 If the user explicitly removes all project rules for the active task, set its new reference to `null`.
 The responsible roles examine only affected targets, support, and submissions again. Keep all pair identities and used counts.
 
+### Use project writing preferences
+
+In each task, use the optional root `TASTE.md` before you first assign or start work on text for readers.
+Reuse the current preferences in the same context. If a context lacks them, read the file.
+Read it again if the user reports a change or you find that the file has changed.
+Give the applicable preferences to the roles that write or review the text.
+
+Apply the user's explicit writing instructions for this task before the project preferences.
+Use preferences for the intended audience, choice of content, and steps that need explanation.
+You can omit routine failed attempts from the text for readers.
+Keep mathematical conditions and gaps that affect the result explicit. Preserve required reviews, handoff records, and deliverables.
+Use the project rules and this procedure for mathematical definitions and restrictions on methods.
+
 ### Project layout
 
 Use the project root as the base for all persistent paths.
@@ -89,6 +128,7 @@ project/
   AGENTS.md
   PROJECT_RULES.md                 # Optional
   SUBAGENT_MODELS.json             # Optional
+  TASTE.md                         # Optional writing preferences
   README.md
   CURRENT.yaml
   fact_graph/
@@ -98,6 +138,10 @@ project/
     supports/S0017/r1.json
     graphs/G0008.json
   additional_papers/
+  human/                           # Optional contributed material
+    notes.md                       # Contributor chooses the filename
+    STATUS.md
+    versions/H007/r1/notes.md      # Fixed source when a copy is necessary
   route_reviews/
     REVIEW001/
       REVIEW001.md
@@ -169,6 +213,8 @@ Use stable identifiers for the objects in the table.
 | Project graph | `G0008` |
 | Paper task and pair | `PAPER001`, `PAPER001P01` |
 | Route review | `REVIEW001` |
+| Material update | `U001` |
+| Contributed item and revision | `H007@r1` |
 | Literature source | `L001` |
 | Computation run | `R003P01/E001` |
 
@@ -236,6 +282,18 @@ Point `ROUND.yaml` to the version in use. Identify a restricted or weaker claim 
 
 Record explicit user assumptions with their scope. Other assertions need admission before use as established facts.
 Give necessary proofs of equivalence to a pair.
+
+### Record the use of contributed material
+
+Treat items that the user names as part of the current request. Apply sections 1 and 14.
+
+When you select an item, record its identifier, version, route, and intended use in this round's `ROUTES.md`.
+After every change to that use record, immediately update the item's use history in `human/STATUS.md`.
+Include the material version, round, route identifier, and evidence location.
+Record an attempt only after it occurs. Then enter its result or obstacle in both files.
+
+If an interruption separates the two writes, use this round's `ROUTES.md` to complete the existing register entry.
+Count each attempt once. If a retry condition requires a search of earlier rounds, leave it for a material update.
 
 ### Use a route review that the user cites
 
@@ -473,6 +531,10 @@ Each support has its own dependencies. Do not merge alternatives into one set of
 Keep original evidence in its source task. Cite fixed source or submission and review versions.
 A changeable draft or latest manuscript cannot serve as fixed evidence.
 
+For a fact or proof from contributed material, keep its origin in the fixed source record or formal submission.
+Include the item identifier, version, original author, and basis for its permitted uses.
+The evidence references in the graph support record must lead back to that source.
+
 Ordinary theorem use names the fact version.
 Use or claims of a particular proof, construction, or method also identify its support or fixed proof version.
 
@@ -702,6 +764,7 @@ Keep established mathematical results when a pause occurs.
 ### Immediate stop
 
 Use these steps for an immediate stop request or a subagent model configuration error.
+Also use them if a request to use contributed material stops an active round under section 1.
 
 1. Stop new work in the entire round.
 2. Send stop requests to active subagents.
@@ -808,6 +871,14 @@ Before the first subagent starts, apply the model settings in `AGENTS.md`.
 Unless the user limits the scope, examine all results available when the task starts.
 Use the current project rules for each new paper task, including a new request after an interruption.
 Identify restricted results or proofs in the inventory. Cover all results in the requested scope.
+
+If selected evidence comes from contributed material, follow its source references even if the user did not name `human/`.
+Read the specific register entry and fixed manuscript as necessary to confirm the author and current permission for public use.
+Record the item version, mathematical basis, author, and permitted public use in `INVENTORY.md`.
+
+Select unpublished proofs within the recorded permission. Follow the recorded requirements for credit.
+Apply the restrictions in section 14 to each support.
+If a restriction takes effect during the paper task, revise the affected selection and keep its earlier source records.
 
 Read graph records, round handoffs, papers, and cited proofs as evidence, not as execution recovery.
 Do not add a previous research pause because paper integration starts.
@@ -1078,6 +1149,8 @@ Give both the same starting material. Specify what they may read for the first d
 
 Each researcher uses only this material to propose routes and save an independent draft in its own record.
 Wait until both save their drafts before sharing the designated historical material and participant records for comparison.
+Keep contributed routes named by the user out of the independent drafts. Share them only during comparison.
+In the review summary, record the item, version, and comparison. If the review only discussed the route, say so.
 
 If you identify a separate search question or another approach, you can assign a third researcher.
 The third researcher can start with the others or after the first drafts.
@@ -1129,3 +1202,82 @@ If all proposals repeat earlier routes, report the overlap and the remaining obs
 
 After delivery, append corrections to the summary. Give the date, reason, and affected route numbers for each correction.
 Preserve the original text and route numbers. For use in a new round, follow section 2.
+
+## 14. Update the register of contributed material — controller
+
+Start a separate material update when the user asks you to organize new or revised material in `human/`.
+The user can also request an update to add a missing attempt or to close or reopen an item.
+
+Use the entry checks in section 1. Do the work without subagents. Give each update its own identifier, such as `U001`.
+A material update uses no research round number, pair slot, or formal submission.
+Use the fact graph, `CURRENT.yaml`, and existing task directories as read-only sources.
+
+### Register each source version
+
+1. For the first update, examine the manuscripts the user specifies.
+   For later updates, compare the material with the previous update. Identify additions, revisions, and explicit withdrawals within scope.
+2. Assign a stable identifier such as `H007` to each idea or result that a task can cite separately.
+   Keep the identifier across revisions, such as `H007@r2`.
+3. Cite a traceable fixed original if one exists. Otherwise, save a copy under `human/versions/` for that version.
+4. For each item, find use records after the last task and location examined.
+   Read only route, review, or paper records that cite the item. Read their fixed evidence when necessary to verify an outcome.
+5. Create `human/STATUS.md` on the first update. Give each item a section under its identifier.
+   Update only entries that have changed.
+6. Record the update identifier, date, tasks examined, and registration status of each version.
+   Report changes and outstanding checks to the user.
+
+Mark each version complete only when its fixed manuscript and its register entry are both complete.
+If the update stops, completed versions remain available. An incomplete revision cannot become the default version.
+Keep earlier versions, past attempts, reasons for closure, and use records already entered by research rounds.
+On a repeated update, record each version and each attempt only once.
+
+### Contents of an item entry
+
+- **Proposal and source.** Summarize the problem, method, conditions, and main gap.
+  Give the version, registration status, original path, and fixed source location, including the page or section.
+  Name the original author and, if different, the contributor.
+- **Use history.** Give the last task and location examined. Distinguish no recorded attempt, discussion only, and an actual attempt.
+  For an attempt, record the method and outcome or obstacle. Cite the task record.
+  Cite the fixed fact or review version for an existing decision. Verify the entries from research rounds.
+- **Future work.** Mark the item open, open under a stated retry condition, or closed.
+  Give the reason for a priority retry. For closure, record the user's instruction, its scope, and any reason the user gave.
+- **Permitted use.** Record permission for project research and for public papers separately.
+  State the credit and citation requirements. Give the basis for the permissions and requirements.
+  If permission for public use of unpublished material is unknown, use it only within the project.
+
+Route reviews and paper tasks record use in their own task records. Add that use to the register during a material update.
+
+### Apply changes and restrictions
+
+If an item has a retry condition, make sure it holds before another attempt.
+Finding a way to meet that condition can be a new research target.
+
+Close or reopen an item only on the user's explicit instruction in a material update.
+For a request to retry a closed item, report the scope and reason for closure.
+An attempt within that scope requires explicit reopening, even if the user names another version.
+Register a substantially different variant outside that scope separately. State the difference.
+For a project-wide restriction that also covers independently proposed methods, use `PROJECT_RULES.md`.
+
+An active task keeps its selected version when the author revises the manuscript. A change to permitted use can affect that task.
+For a withdrawal, closure, or change of permission, record the user's scope and when the change takes effect.
+Apply it to all tasks in that scope, including active tasks.
+For a withdrawal, identify the items or versions, uses, and affected tasks.
+Record the withdrawal under future work or permitted use, as the user intended.
+
+Apply each restriction to the stated result, proof, method, and indirect dependencies within its scope.
+Assess each independent support against its own source and restrictions.
+Record the obstacle a failed attempt encountered. A claim that the entire route is impossible needs mathematical evidence.
+For an admitted counterexample or impossibility proof, give the exact claim and conditions it rules out.
+If the user asks for a proof under the same conditions, cite the counterexample or impossibility proof.
+
+### Separate the proposal from its mathematical evidence
+
+Registration records what the author proposed. The controller can report existing decisions. Leave new proofs and counterexample checks to formal research.
+Use an idea as a possible route. An explicit user assumption supports only a conditional conclusion.
+
+For an eligible literature source, the researcher admits a faithful extract through `LITERATURE`.
+For an original proof or counterexample that needs verification, the worker prepares a fixed submission.
+The assigned verifier examines it under `DERIVED`. Record who wrote the original and who verified the work.
+
+Use admitted results under the fact graph rules. Permission for public use still applies.
+A change in use or closure leaves mathematical decisions intact. Send doubts about correctness through the existing review and graph procedures.

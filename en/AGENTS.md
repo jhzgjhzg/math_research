@@ -1,9 +1,9 @@
 # Mathematical research rules
 
-Version: 0.4.0
+Version: 0.5.0
 
 Use these rules to start a new research round or resume an interrupted round.
-They also apply to paper integration and route reviews.
+They also apply to paper integration, route reviews, and updates to the register of contributed material.
 Before work starts, read this file and the active research `SKILL.md` to confirm that their full versions match.
 If you cannot confirm the match, stop. Report the paths, available versions, and reason to the user.
 
@@ -23,6 +23,9 @@ Use only these two admission channels. Each pair has one fixed worker and one fi
 
 During a route review, researchers propose routes and report literature leads. The controller compares their proposals and writes the summary.
 Make no `LITERATURE` or `DERIVED` admissions during a route review.
+
+For a material update, the controller works alone. Use section 14 of the skill to maintain `human/STATUS.md`.
+During research, the controller also records each use of a registered item as specified in section 2.
 
 Use Codex subagents for the researcher, worker, and verifier roles.
 Give each subagent its task, applicable project rules, permitted inputs, and output paths. Role assignments alone do not isolate files.
