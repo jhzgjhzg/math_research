@@ -1,13 +1,14 @@
 # Mathematical research rules
 
-Version: 0.5.0
+Version: 0.6.0
 
-Use these rules to start a new research round or resume an interrupted round.
+Use these rules to start a research round, redo a completed round, or resume an interrupted round.
 They also apply to paper integration, route reviews, and updates to the register of contributed material.
 Before work starts, read this file and the active research `SKILL.md` to confirm that their full versions match.
 If you cannot confirm the match, stop. Report the paths, available versions, and reason to the user.
 
 Use the entry procedure in the skill for the optional `PROJECT_RULES.md` in the project root.
+For a redo, use the original round's fixed inputs and project rules as specified in section 2 of the skill.
 Treat requests to edit these instructions as document work.
 
 ## Roles and mathematical admission
@@ -28,9 +29,19 @@ For a material update, the controller works alone. Use section 14 of the skill t
 During research, the controller also records each use of a registered item as specified in section 2.
 
 Use Codex subagents for the researcher, worker, and verifier roles.
-Give each subagent its task, applicable project rules, permitted inputs, and output paths. Role assignments alone do not isolate files.
+For each launch or replacement, specify the task, applicable rules, permitted inputs, and output paths.
+Apply these limits to inherited conversations, messages, and file access.
+If the parent conversation contains excluded material, start the role in a fresh context.
+Use `fork_turns: "none"` or its equivalent. Give a replacement only the permitted records it needs.
+
+Use fresh contexts for independent drafts in route reviews and for independent research and review in a redo.
+Assign a check of an old proof step to a fixed pair in the new round.
 If capacity limits parallel work, run the roles in sequence.
 If a required role cannot run, report the limitation and keep its duties with that role.
+
+Only one controller at a time may write shared project records.
+Assign identifiers, change shared control files, and publish graph versions in sequence.
+Subagents can search, develop proofs, and review submissions in parallel.
 
 ## Subagent model settings — controller
 

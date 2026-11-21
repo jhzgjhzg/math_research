@@ -1,8 +1,8 @@
 ---
 name: math-research
-description: Start a mathematical research round or resume an interrupted round. Integrate results into a paper or review other ways to prove or disprove the original claim. Update the register of contributed material. Use the project AGENTS.md from the same release.
+description: Start a mathematical research round, redo a completed round, or resume an interrupted round. Integrate results into a paper or review other ways to prove or disprove the original claim. Update the register of contributed material. Use the project AGENTS.md from the same release.
 metadata:
-  version: "0.5.0"
+  version: "0.6.0"
 ---
 
 # Mathematical research procedure
@@ -30,8 +30,10 @@ Leave both files intact during this check. A change to a version label alone doe
 Use the actual files as evidence. Memory, skill listings, and the latest online release cannot establish a match.
 
 After a match, apply the other entry conditions for the requested task.
-Use section 2 for a new round or section 9 to resume an interrupted round.
+Use section 2 for an ordinary new round or an explicit request to redo a completed research round.
+Use section 9 to resume an interrupted round.
 Use section 10 for paper integration or section 13 for a route review.
+On a request to repeat a paper task or route review, start a new task under its usual rules.
 Use section 14 for a request to update the register of contributed material.
 
 If the user requests an update and a subsequent research round, review, or paper, complete the separate update first.
@@ -61,13 +63,15 @@ Routine research, reviews, and paper tasks do not scan the manuscripts in `human
 
 ### Apply project rules
 
-For a new round, paper task, route review, or material update, first obtain any required confirmation.
+For an ordinary new round, paper task, route review, or material update, first obtain any required confirmation.
 Then look for `PROJECT_RULES.md` in the research project root.
 
 If the file exists, read it before task setup.
 If the file is absent, use the user's instructions and the usual defaults.
 If it exists but you cannot read it, report its path. Wait for readable rules before you start the task.
 Only the two required files take part in the release check.
+
+For a redo, use the original round's fixed rules and exceptions under section 2, including a recorded absence.
 
 For choices that this procedure permits, apply explicit instructions for the current task first.
 For other permitted choices, use applicable project rules, then the defaults.
@@ -78,7 +82,7 @@ Keep the release check, fixed review, mathematical admission, and submission cou
 For a route review, give each researcher the applicable clauses and task exceptions.
 For a new round or paper task, record the rules as follows.
 
-1. If the root file exists, save its exact text as `PROJECT_RULES_r01.md` in the task directory.
+1. If the selected rules file exists, save its exact text as `PROJECT_RULES_r01.md` in the task directory.
 2. Set `project_rules_ref` to the project-relative path of that fixed copy, or to `null` for confirmed absence.
 3. Record this reference and any task exceptions with their scope in `ROUND.yaml` or `PAPER.md`, as applicable.
 4. Give the researcher, workers, and verifiers the applicable clauses, task exceptions, and fixed record reference.
@@ -111,6 +115,44 @@ Use preferences for the intended audience, choice of content, and steps that nee
 You can omit routine failed attempts from the text for readers.
 Keep mathematical conditions and gaps that affect the result explicit. Preserve required reviews, handoff records, and deliverables.
 Use the project rules and this procedure for mathematical definitions and restrictions on methods.
+
+### Human notes for a round, route review, or paper
+
+When the task ends normally, create `human.md` in its directory. Keep any existing file intact.
+For a new file, write only these two headings. Delivery can proceed with both sections empty.
+
+```markdown
+## New ideas for future rounds
+
+## Observations on this round
+```
+
+For a route review, use “Observations on this review” as the second heading.
+For a paper, use “Observations on this paper”.
+Use the first section for a possible proof route, counterexample strategy, construction, literature lead, or case to test.
+The second gives the author's observations about a specific route, theorem, lemma, or proof step.
+An observation can express doubt. Use statements here and leave questions for the conversation.
+
+Only enter a note for the author on explicit request. Preserve the author's meaning.
+Filling in this file does not start a task.
+
+| Request | Notes to read |
+| --- | --- |
+| Ordinary new round without a reference to these notes | Skip task directories' `human.md` files. |
+| New round that cites a task's `human.md` | Read the first section for candidate routes. |
+| Redo of a completed research round | Read the second section of that round's file. |
+| A specific note, section, or both sections | Read the requested material. |
+
+If an old file is absent or the default section is empty, record that no such notes were available.
+Proceed with the requested task. If a specific requested note is unavailable, report the omission and its effect on scope.
+Do not supply a missing note yourself.
+
+For each note you use, record its path and section in the existing route, review, or paper record.
+Include the exact text or a fixed reference, the checks, and the outcome.
+Continue with the recorded note after an edit unless the user explicitly changes the task.
+Use the usual admission procedure before using a human judgment as a mathematical premise.
+If you select material from the project `human/` directory through a note, apply its version, permission, and use rules.
+Reading a task's notes alone does not require `human/STATUS.md`.
 
 ### Project layout
 
@@ -145,6 +187,7 @@ project/
   route_reviews/
     REVIEW001/
       REVIEW001.md
+      human.md
       researchers/
         RESEARCHER01.md
         RESEARCHER02.md
@@ -156,6 +199,7 @@ project/
       PROJECT_RULES_r01.md          # Fixed copy if project rules exist
       ROUTES.md
       CHECKPOINT.yaml
+      human.md
       code/R003P01/
         work/
         runs/E001/                  # RUN.yaml, fixed code, inputs, outputs
@@ -184,6 +228,7 @@ project/
   out_papers/
     PAPER001/
       PAPER.md
+      human.md
       PROJECT_RULES_r01.md          # Fixed copy if project rules exist
       INVENTORY.md
       pairs/
@@ -223,9 +268,18 @@ New rounds and paper tasks use new pair identifiers.
 During recovery within the same round, keep its pair identifiers.
 Inherited facts keep their original identifiers, revisions, and source references.
 
-During an active task, a replacement agent can take the same role with the same pair, history, and budget.
+At each launch or replacement, specify the role's task, applicable rules, permitted inputs, and output paths.
+Apply the input limits to inherited conversations, messages, and files that the role reads.
+If your conversation contains excluded material, start the agent with `fork_turns: "none"` or its equivalent.
+Give the agent only permitted inputs. This also applies when you have read another pair's pending proof.
+Keep the fresh contexts required for independent route review drafts and independent work in a redo.
+
+A replacement keeps the logical role, pair, and used budget. Supply only the permitted records and material it needs.
 Keep the assigned verifier through repairs. Never replace a verifier to obtain a different decision.
-Only the controller updates shared control files. Copy admission decisions exactly.
+
+Only one controller at a time may write shared records in a project.
+Assign task and object identifiers, update shared control files, and publish graph versions in sequence.
+Subagents can search, develop proofs, and review submissions in parallel. Copy admission decisions exactly.
 
 An agent session identifier is only an additional reference.
 It does not replace the logical role or pair identifier.
@@ -235,9 +289,11 @@ They are not sufficient identifiers for fixed historical evidence.
 
 ## 2. Start a new round — controller
 
-A new round accepts only user requirements, `CURRENT.yaml`, the current fact graph, and the latest `final/` summary.
+An ordinary new round accepts only user requirements, `CURRENT.yaml`, the current fact graph, and the latest `final/` summary.
 Use the entry check in section 1. User requirements include this round's project rules and subagent settings.
-Do not read previous pair directories, submissions, verifier reviews, drafts, or checkpoints to start a new round.
+For ordinary startup, skip previous pair directories, submissions, verifier reviews, drafts, and checkpoints.
+After a redo, use section 8 to select the next ordinary round's target and frontier.
+For a redo, select historical inputs as specified below before you assign work.
 
 Use section 9 to record a previous pause or resume an interrupted round.
 A pause entry alone does not make execution recovery necessary.
@@ -245,10 +301,10 @@ Before new-round setup, complete any necessary confirmation from section 9.
 
 1. Read the user's target, limits, changes, and interruption report.
 2. If `CURRENT.yaml` is available, read it.
-3. In the latest handoff, read `START_HERE.md`, `RESULT.yaml`, `PROBLEM.md`, and `FRONTIER.md` in that order.
-4. Read the full fact records necessary for the current task.
+3. If an input handoff exists, read its `START_HERE.md`, `RESULT.yaml`, `PROBLEM.md`, and `FRONTIER.md` in that order.
+4. From the selected graph, read the full records necessary for the task.
 5. If the recovery conditions apply, use section 9 instead of the new-round steps below.
-6. Record the new round, exact target, rules reference, exceptions, policy, and new budgets.
+6. Record the new round, exact target, fixed handoff reference, rules reference, exceptions, policy, and new budgets.
 7. If no graph exists, publish the initial project graph under section 6.
 8. Record the fixed published input graph version. A new round needs only a reference to this version.
 9. Apply the subagent model settings in `AGENTS.md`.
@@ -256,7 +312,7 @@ Before new-round setup, complete any necessary confirmation from section 9.
 
 If there is no earlier state, initialize the project records.
 An initial graph can contain no accepted results.
-Read current facts through the root `fact_graph/HEAD.yaml`.
+For an ordinary new round, read current facts through the root `fact_graph/HEAD.yaml`.
 Do not replace a newer current graph with the graph in an older handoff.
 A new conversation does not automatically create a new round budget.
 Do not read `additional_papers/` during routine startup or recovery.
@@ -272,7 +328,7 @@ Use the required contents for each record.
 | `README.md` | Project purpose, rule locations, date and path conventions, adopted policy location, reading order, supplementary-paper rule, deferred features. No separate progress ledger. |
 | `CURRENT.yaml` | `project_id`, `current_round`, `current_fact_head`, `latest_handoff`. `current_fact_head` points to root `fact_graph/HEAD.yaml`. Fill paths only after targets exist. |
 | `PROBLEM.md` | Original question, exact target, identifier and revision, objects, quantifiers, ranges, hypotheses, conclusion, definition references, additional requests, uncertainties, changes. |
-| `ROUND.yaml` | Round identifier, creation time, previous round, target revision and path. Fixed input and output graphs, budgets, started pairs, policy, and user instructions. Include `project_rules_ref`, `subagent_models`, and task exceptions. |
+| `ROUND.yaml` | Round identifier, creation time, preceding round in execution order, target revision and path. Fixed input and output graphs, budgets, started pairs, policy, and user instructions. Include `input_handoff_ref`, `project_rules_ref`, `subagent_models`, and task exceptions. |
 | `ROUTES.md` | Route identifier, purpose, core method, sources, accepted inputs, distinguishing features, proof gaps, pair assignment, outcome, and stop reason. |
 | `CHECKPOINT.yaml` | Last full graph, submissions, completed and pending reviews, accepted results awaiting entry, open requests, draft or code paths, next action. Use the formal records as the basis. |
 
@@ -282,6 +338,71 @@ Point `ROUND.yaml` to the version in use. Identify a restricted or weaker claim 
 
 Record explicit user assumptions with their scope. Other assertions need admission before use as established facts.
 Give necessary proofs of equivalence to a pair.
+
+For every new round, set `input_handoff_ref` to the exact handoff version you use.
+Use `null` when no input handoff applies, including a redo from the first round's initial state.
+
+Use a reference that still identifies the handoff after replacement, such as its round and unique ending record.
+Match this reference to the handoff or its archived copy in `audit/handoffs/HNNN/`.
+The round number or the current `final/` path alone cannot identify a handoff version.
+
+### Redo a completed research round
+
+On an explicit request, assign the new round a number one greater than the highest project round number.
+This applies to the latest completed round and to any earlier completed round.
+For example, after `R010`, a redo of `R003` starts `R011`. Its preceding round in execution order is `R010`.
+Keep all records of the original and later rounds intact.
+
+If the round is interrupted and the user requests continuation, resume the same round under section 9.
+For a redo, allocate new pairs and budgets under its requirements. Select models under the new-task rules in `AGENTS.md`.
+Each pair starts at `v01`. Pending reviews and used counts stay with the original round.
+
+1. Use the original `ROUND.yaml` to locate the fixed target, user requirements, project rules, exceptions, input graph, and input handoff.
+2. Read the handoff version that the original round used. A redo of the first round uses its initial question and requirements.
+3. Use the original fixed input graph by default, even if a paper task published a graph between rounds.
+   For example, `R002` ended at `G0010`, but `R003` started at `G0011`. A redo of `R003` uses `G0011`.
+   Use `G0010` only if the user explicitly selects that earlier state.
+4. Apply the original fixed project rules and exceptions. Record the rules you use under section 1.
+   Apply current material permissions and any other use restrictions that cover this task.
+5. Read the original round's human notes under section 1. Treat any old conclusion in a note as a claim to check.
+6. In the new `ROUND.yaml`, identify the original round in `redo_of`. Record the selected inputs and each explicit user adjustment.
+   Identify any change to the historical inputs that current use restrictions require.
+
+If fixed records cannot establish a necessary requirement, input graph, or handoff version, identify the missing record.
+Ask the user to supply or confirm the historical inputs before you proceed.
+
+Keep `CURRENT.yaml.current_fact_head` at the project graph entry. Leave `HEAD.yaml` at the current graph.
+Set `CURRENT.yaml.current_round` to the new round. Update `latest_handoff` only after its handoff is complete.
+If an external interruption stops the redo, use section 9 for that new round. Keep its used budget and input limits.
+
+### Keep independent work within the selected inputs
+
+Read only the necessary fields and exact fact and support versions in the historical manifest.
+Follow dependencies within that same manifest. Check each selected fact and support for current availability and use restrictions.
+Exclude withdrawn or invalid support. A later proof of the same fact cannot replace it in the starting material.
+
+For a contributed item, supply its permitted fixed manuscript and current permissions.
+Exclude attempt results that the original or later tasks added to `human/STATUS.md`.
+
+At startup, skip the original round's own handoff, route outcomes, submissions, reviews, and paper.
+Exclude facts, proofs, and deductions that the original round or subsequent rounds and paper tasks added.
+Later handoffs, papers, and use records can disclose the same material. Keep it out of independent assignments.
+
+Start each independent researcher, worker, and verifier with `fork_turns: "none"` or its equivalent.
+Specify each role's reading limits in the task records. Supply only permitted historical inputs, applicable rules, and permitted human notes.
+Researchers can search sources independently. Pairs can develop new proofs through the usual admission channels.
+Record the actual source or deduction even if it gives the same result again.
+
+If a note identifies an old proof step, assign the check to a fixed pair in the new round.
+The worker reads only the necessary passage and context in the fixed original.
+The worker records its location and submits a fixed report to the assigned verifier.
+Charge the pair and its formal deliveries to the new round. The old decision cannot establish the step.
+
+Keep the old text and comparison findings from pairs that still work independently.
+This includes passages from human notes that disclose the excluded work.
+Record the actual dependencies of each finding. Apply any change in support availability or permission to the affected work.
+Compare each independent result only after its evidence and admission record are fixed.
+Compare the round's overall results after the corresponding independent work is fixed.
 
 ### Record the use of contributed material
 
@@ -297,13 +418,14 @@ Count each attempt once. If a retry condition requires a search of earlier round
 
 ### Use a route review that the user cites
 
-When the user does not cite a review, skip `route_reviews/` at the start of a new round.
-If the user explicitly cites a review or one of its routes, read its summary as part of the request.
+During ordinary startup, skip `route_reviews/` unless the user cites material there.
+If the user cites only a task's `human.md`, read only the requested notes under section 1.
+If the user requests the review itself or one of its routes, read the summary.
 For example, route 2 of `REVIEW001` refers to `route_reviews/REVIEW001/REVIEW001.md`.
 Read the completion note and any corrections for the original route number.
 Read an individual researcher record only if the user explicitly requests that record.
 
-Select routes that fit the current target, project restrictions, and current fact graph.
+Select routes that fit the target, project restrictions, and permitted graph evidence for this round.
 For each route you select, record the review identifier and route number in this round's `ROUTES.md`.
 Treat proposed routes as leads. An unadmitted claim cannot serve as an established premise.
 
@@ -342,7 +464,7 @@ For literature leads during a route review, use section 13. Use the procedure be
 4. Extract the full definitions, hypotheses, quantifiers, ranges, and conclusions.
 5. Record the exact source location and the notation changes for each fact.
 6. Accept faithful literature facts through `LITERATURE`.
-7. Record the research boundary, target gaps, accepted fact identifiers, and search limits in `RESEARCH.md`.
+7. Record the research boundary, target gaps, and search limits in `RESEARCH.md`. Add the admitted fact identifiers after publication.
 8. Send full admission records and route material to the controller.
 
 Search snippets are leads, not sufficient evidence for a full theorem.
@@ -398,11 +520,12 @@ Repairs to the same method stay in the existing pair.
 
 `TASK.md` identifies the pair, parent round or paper task, fixed roles, target, scope, and submission limit.
 Include the input graph, permitted facts, expected output, constraints, and stop conditions.
+For a redo, also identify the permitted support versions or fixed evidence for each assigned premise.
 For research routes, add the route identifier, core method, distinguishing features, and proof gaps.
 Do not invent proof routes for inventory, originality, manuscript, or presentation work.
 Keep a record of material changes to the task.
 
-Pairs can share admitted facts, source requests, candidate claims, method outlines, and administrative progress.
+Within their permitted inputs, pairs can share admitted facts, source requests, candidate claims, method outlines, and administrative progress.
 Keep unaccepted proof text within its pair and the controller's administrative scope.
 A different pair can take a candidate claim as a target. It needs admission before use as a premise.
 Assign connecting arguments within the original scope and budget, or use an available pair.
@@ -542,22 +665,76 @@ A new proof of an existing fact needs new support admitted through `DERIVED`.
 Other valid support for the fact does not establish that proof.
 Task restrictions govern use of evidence. Preserve the fact's admission and its historical support records.
 
-If a support record is no longer valid, stop using it.
-Keep any other accepted support that applies to the exact statement.
-If a dependent result has no other valid support that applies to it, stop using that result.
+Send a suspected proof gap or a conflict between accepted sources under the same conditions for formal examination.
+If the examination confirms a defect or conflict, stop using the affected support.
+Follow reverse dependencies to check all affected results. Keep other valid support for the exact statement available.
+Stop using a result if it loses all applicable valid support.
 A defective proof does not by itself refute the claim.
 
 Send new mathematical judgments to the researcher or fixed pair. Do not decide them as controller.
 Circular dependencies cannot establish a proof. Joint induction needs an admitted complete argument.
 
-1. Examine the identity and exact scope of admission decisions.
-2. Save new fact and support versions.
-3. Save the new manifest with availability states and their reasons.
-4. Examine all references and exact version correspondence.
+### Compare admitted results before publication
+
+Apply this procedure to each result or batch from any research round or paper task.
+Comparison and publication can start while other work continues.
+
+1. Fix each exact statement and its admission evidence.
+   For `LITERATURE`, use the researcher's fixed source and admission record.
+   For `DERIVED`, use the worker's fixed submission and its assigned verifier's decision.
+   In a redo, complete this step before you read excluded results for comparison.
+2. Read the manifest that `fact_graph/HEAD.yaml` identifies at publication. Use `index.jsonl` to find candidate matches.
+   If the index is missing or old, rebuild it or read the manifest directly.
+3. Compare the full statements, definitions, hypotheses, quantifiers, ranges, and conclusions. Compare entries within the batch as well.
+4. Check the fixed proof or source, actual dependencies, and review records before you reuse support.
+   A similar name, wording, or method can suggest a candidate. It cannot establish a match.
+
+The controller can check identity, versions, and the admitted scope.
+If equivalence, implication, proof relationships, or support applicability need a new argument, assign it to a fixed pair under `DERIVED`.
+Use the remaining pair slots and submissions of the round or paper task that needs the comparison.
+
+If the budget is insufficient or the relationship remains open, retain the precise admitted statements and evidence.
+Record the open relationship. Keep the records separate until evidence permits a merge or reuse of support.
+Do not increase the task budget automatically.
+
+| Finding | Publication decision |
+| --- | --- |
+| Same statement and same usable fixed evidence | Reuse the fact and support versions. Keep the task's own source or submission and review records. |
+| Same statement with different admitted support | Keep the fact version. Add support with its evidence and actual dependencies. A change of wording or submission number alone does not establish a new proof. |
+| Correction to the same proof | Create a support revision for the corrected evidence or dependencies. |
+| Correction to the same statement | Create a fact revision. Keep the old version. Each support must name the exact version it establishes. |
+| Distinct statements with uses of their own | Register them separately. For example, a stronger result and a weaker result can both have entries. |
+| Admitted statement absent from the current graph | Create one fact for all matching records in the batch. Register each distinct admitted support once with its source and dependencies. |
+
+Record each task's own result and fixed evidence separately from its mapping to reused or new graph records.
+A proof cites only evidence it actually used. A later match cannot supply an earlier premise.
+
+On a repeated publication request, check the existing mapping. Register each fixed version once.
+If all entries reuse existing records and no state changes, keep the current graph. Record the reproduction in the task.
+In the publication or handoff record, identify the comparison graph and final output graph, even when they match.
+
+### Publish changes and assign admitted results
+
+1. Before publication, check whether the current graph has changed since the comparison.
+   If it has changed, check the affected entries against the new manifest.
+2. Save new or revised fact and support records.
+3. Use the current graph at publication as the parent of the new manifest. Keep all other facts, supports, and dependencies.
+4. Record availability states and reasons. Check all references and versions.
 5. After all required records exist, update `HEAD.yaml`.
 6. Generate the search index for that graph again.
-7. Record the publication event in its source task.
-8. For a research round, update its checkpoint.
+7. Record the publication event in its source task. For a research round, update its checkpoint.
+
+After admission, comparison, and publication, another pair can use the result during the same task.
+Specify the exact fact version and its permitted support or fixed evidence in the task record.
+In a redo, give independent pairs only usable premises from the selected historical inputs.
+You can also give them this round's results if independent work established them from permitted inputs through mathematical admission.
+For example, a second pair can use the first pair's admitted proof of a lemma.
+Exclude earlier proofs outside that pair's scope, even if both proofs share a fact identifier.
+
+Record actual dependencies for findings from a comparison or a check of old text.
+Use such findings to match records, update support states, and publish changes.
+Keep findings that rely on excluded material out of independent work. Preserve the evidence each pair actually used.
+A worker can still prove and use a local lemma within one complete submission.
 
 `CURRENT.yaml.current_fact_head` points to the root `HEAD.yaml`.
 Do not keep another current graph identifier in `CURRENT.yaml`.
@@ -566,9 +743,7 @@ For the first graph, save the records and manifest before setting the entry poin
 An interruption record refers to the last complete published graph.
 
 Keep published fact, support, and manifest files unchanged.
-For changed statements, hypotheses, or definitions, create a fact revision.
-For an independent proof, add support without changing the fact statement.
-For changed proof evidence or dependencies, create a support revision.
+Changes to hypotheses or definitions also require a fact revision.
 
 For availability changes or withdrawals, create a graph manifest with reasons.
 Support for a new fact revision must name that revision as its target.
@@ -651,14 +826,32 @@ Map paper labels to exact fact versions and proof locations in `CLAIMS.yaml`.
 For new proof or method claims, also identify the actual support or fixed proof version.
 Keep open claims clearly identified as open.
 
-The controller can arrange existing text and compile the paper.
-Give new mathematical connections to a pair.
+### Review the complete manuscript
+
+For delivery as a completed paper, assign the complete manuscript to a fixed worker and verifier.
+This applies to papers from one round and papers from several rounds.
+The controller can arrange existing text and compile the paper. Give new mathematical arguments to a pair for admission.
 For integration across rounds, use the complete procedure in section 10.
 Use the default `amsart` form and mathematical language rules in that section for papers.
+
+1. Have the responsible worker submit the exact, fixed, complete manuscript to its verifier.
+2. Have that verifier check the definitions, notation, hypotheses, cross-references, links between arguments, and contribution claims throughout the manuscript.
+   Complete the other checks that apply to this paper. Record the decision for this exact manuscript.
+3. After acceptance, build the final PDF from the reviewed fixed sources. Check that the PDF matches those sources.
+
+Within a research round, use a suitable existing pair or an available pair slot.
+Charge the manuscript and formal repairs to that pair's remaining submissions in its own task.
+An existing `PAPER` task uses its own pairs and budget. Keep round and paper budgets separate.
+If the budget is insufficient or a required review remains open, record incomplete paper delivery. Keep admitted mathematical results.
+
+A research round can retain a partial manuscript or PDF. Record the completed work, actual review scope, and outstanding checks.
+Record paper delivery separately from the mathematical result. A partial manuscript alone does not start a `PAPER` task.
 
 For a published PDF, save `out/paper.pdf` and `BUILD.yaml`.
 Record the build time, fixed source location, graph version, command, and necessary tools.
 Keep separate source records for separate published versions.
+
+### Record unresolved issues
 
 Record issues with stable identifiers in `FRONTIER.md` and references in `RESULT.yaml`.
 
@@ -681,8 +874,8 @@ Stop only the affected work. Keep unresolved target information explicit.
 
 ### Determine the mathematical result
 
-By default, assess cumulative progress for the exact target version. List this round's new results separately.
-Count a result as new to the project when the project derives it and admits it.
+For an ordinary round, assess cumulative progress for the exact target version by default.
+List this round's new results separately. Count a project deduction as a new statement only after admission and comparison under section 6.
 For claims of originality in a paper, use section 11.
 
 | Result | Required evidence |
@@ -699,6 +892,20 @@ If the result status is unknown, omit `result_status`. Record the missing eviden
 Proof failure, budget exhaustion, and an unsuccessful search do not establish proof or refutation.
 Report progress on extra requests separately, including a new proof under method restrictions or a stronger result.
 
+For a redo, apply the same four criteria within the scope of independent work.
+Use only permitted historical evidence and evidence independently admitted from permitted inputs in this round.
+In `RESULT.yaml`, record the following information.
+
+- In `result_scope`, identify the original round, actual historical inputs, and applicable restrictions.
+- In `basis_fact_ids` and the evidence locations, identify the facts and exact support or fixed evidence used within this scope.
+- In `scope_note` and the handoff, distinguish the independent result from findings of directed checks or comparisons.
+  Give the current status of the original decision separately.
+- In `new_results_this_round`, use the publication decisions from section 6. Record a reproduction separately and a new proof as new support.
+
+For example, a redo can end as `UNRESOLVED` even if the original round ended as `PROVED`.
+Failure to reproduce the result leaves the original decision in force unless formal examination changes its basis.
+Report findings from checks of excluded evidence with their actual scope and dependencies. They cannot establish independent reproduction.
+
 ### Prepare the handoff
 
 Complete the round when you settle the target, finish the tasks, exhaust the budget, or reach an agreed boundary.
@@ -709,13 +916,13 @@ For completion without interruption, use only necessary pair slots and actual ou
 
 1. Record the actual reason for completion.
 2. Collect formal outcomes and unfinished tasks.
-3. If an accepted result is still missing from the fact graph, add it from its original admission record.
-4. Publish graph changes under section 6, if changes are necessary.
-5. Identify the complete published graph for the handoff.
+3. Check any remaining admitted results against the project graph under section 6.
+4. Publish any changes from that comparison.
+5. Identify the complete current project graph for the handoff, including results outside a redo's evidence scope.
 6. Prepare the five handoff files in the table below.
 7. Examine target versions, fact versions, decisions, counts, and evidence paths against their source records.
 8. After the handoff files are ready, publish the actual ending declaration in `final/RESULT.yaml`.
-9. Update `CURRENT.yaml` with the latest handoff location.
+9. Update `CURRENT.yaml` with the latest handoff location. Create or preserve the round's `human.md` beside `final/` under section 1.
 10. Keep the actual paper and computation outputs with their source records.
 11. Before cleanup, move necessary evidence from `temp/` to stable locations.
 12. Delete only temporary material that is safe to remove.
@@ -745,6 +952,11 @@ Mutable `HEAD.yaml` is not a fixed historical reference.
 
 The handoff must support a new round without previous execution records or the full conversation history.
 Keep unresolved ideas as candidate targets. Only admitted facts can serve as existing premises.
+
+After a redo, the next ordinary round follows the target and frontier in the latest handoff by default.
+Use the full current graph and ordinary rules for project requirements, models, budgets, and result scope.
+If the user selects an earlier target, read only that target and its necessary frontier from the earlier records.
+Use the current graph unless the user explicitly limits the inputs.
 
 During research, read cited evidence beyond `final/` only for a specific source check.
 Before future use of a historical fact, examine its current availability through `CURRENT.yaml`.
@@ -837,7 +1049,7 @@ After a configuration error, check the settings before work resumes. If the erro
 2. Recover literature admissions and completed verifier decisions from formal records.
 3. Locate unfinished pairs, exact submissions, review progress, and submission history.
 4. Separate accepted facts, pending drafts, and incomplete files.
-5. If an accepted result is still missing from the fact graph, add it from its original admission record.
+5. Use section 6 for admitted results still awaiting publication.
 6. Continue in the existing round and pair directories.
 7. Before research continues, record the recovery basis in `audit/`.
 
@@ -867,6 +1079,7 @@ Create `out_papers/PAPER001/` at the project root, beside `rounds/` and `additio
 Use a new paper task identifier, pairs, and budget. Do not increase the round number.
 Do not change `CURRENT.yaml.current_round` or the research `latest_handoff`.
 Before the first subagent starts, apply the model settings in `AGENTS.md`.
+For a new integration that cites notes from an earlier task, use the requested notes under section 1.
 
 Unless the user limits the scope, examine all results available when the task starts.
 Use the current project rules for each new paper task, including a new request after an interruption.
@@ -974,9 +1187,12 @@ After an external interruption, record incompleteness when possible. Do not resu
 For a new user request to start integration again, create a new task, pairs, and budget.
 Previous files can serve as input material, not restored execution state.
 
-Publish new admitted facts and new accepted proofs in the shared graph.
-Record the paper task as the support source. No research round is necessary for these results.
+Use section 6 to compare and publish admitted results during the paper task.
+Identify the paper task as the source of its new or revised support. Preserve the source of any support you reuse.
+No research round is necessary for these results.
+
 Keep the original target's mathematical result separate from paper delivery completion.
+Use section 7 for complete manuscript review. When the task ends normally, create or preserve its `human.md` under section 1.
 
 ### Paper form and language
 
@@ -1149,7 +1365,8 @@ Give both the same starting material. Specify what they may read for the first d
 
 Each researcher uses only this material to propose routes and save an independent draft in its own record.
 Wait until both save their drafts before sharing the designated historical material and participant records for comparison.
-Keep contributed routes named by the user out of the independent drafts. Share them only during comparison.
+Share the user's selected contributed routes and notes from earlier tasks only during comparison.
+Use section 1 to record the notes you use.
 In the review summary, record the item, version, and comparison. If the review only discussed the route, say so.
 
 If you identify a separate search question or another approach, you can assign a third researcher.
@@ -1202,6 +1419,7 @@ If all proposals repeat earlier routes, report the overlap and the remaining obs
 
 After delivery, append corrections to the summary. Give the date, reason, and affected route numbers for each correction.
 Preserve the original text and route numbers. For use in a new round, follow section 2.
+When the review ends normally, create or preserve its `human.md` under section 1.
 
 ## 14. Update the register of contributed material — controller
 

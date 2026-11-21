@@ -1,6 +1,6 @@
 # Math Research
 
-Version: **0.5.0**
+Version: **0.6.0**
 
 Use these instructions with Codex to run mathematical research rounds, review alternative routes, or prepare a paper from accumulated results.
 You can also register ideas, proof drafts, and unpublished manuscripts for use in these tasks.
@@ -36,6 +36,20 @@ On a configuration error, the controller pauses the entire research round and re
 After correction, ask to resume that round with the corrected settings. For an incomplete paper task, request a new integration.
 For a route review, the controller stops the review and its active researchers, keeps completed work, and reports the cause.
 
+## Leave notes or redo a round
+
+Each round, route review, or paper task that ends normally has a `human.md` in its own directory.
+For example, `R008/human.md` refers to `rounds/yyyy_mm_dd_round008/human.md`.
+Put ideas for later rounds in the first section. Put observations on that task's mathematics in the second section.
+
+- “In the next round, use the notes in `R008/human.md`.” This selects the first section. You can also name a specific note.
+- “Redo `R008`.” This starts the next numbered research round with fresh pairs and budgets. It selects the second section.
+- “Resume interrupted round `R008`.” This continues that round with its existing pairs and remaining budget.
+
+A redo starts from the fixed graph, handoff, and rules that the original round actually used.
+The independent result has its own evidence scope. The project keeps its full graph and records any new proof as separate support.
+The next ordinary round follows the latest handoff and uses the full current graph.
+
 ## Request a route review
 
 Ask for alternative ways to prove or disprove the original claim. Two researchers first develop independent proposals.
@@ -66,5 +80,5 @@ Include exceptions and source references where applicable. The following example
 - **Proof restriction.** For target T, exclude the published proof of theorem A and arguments that depend on that proof. A new proof of A from the project hypotheses is permitted. Use it after mathematical admission.
 
 For an exception limited to one task, give the exception in that task's request.
-New rounds, paper tasks, route reviews, and material updates use the current project rules.
+Ordinary new rounds, paper tasks, route reviews, and material updates use the current project rules.
 An interrupted round resumes with its recorded rules by default.
