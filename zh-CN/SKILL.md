@@ -2,7 +2,7 @@
 name: math-research
 description: 开始数学研究轮次、重做已正常结束的轮次或续做中断轮次。将成果整合为论文，或审阅可能证明或证伪原始命题的其他路线。整理并登记人工材料。须配合相同发布版本的项目 AGENTS.md 使用。
 metadata:
-  version: "0.6.0"
+  version: "0.6.1"
 ---
 
 # 数学研究流程
@@ -83,7 +83,8 @@ metadata:
 新轮和论文任务按以下步骤保存约定。
 
 1. 所选约定文件存在时，将原文保存为任务目录内的 `PROJECT_RULES_r01.md`。
-2. 将 `project_rules_ref` 设为副本相对于项目根目录的路径。确认根文件不存在时，填 `null`。
+2. 将 `project_rules_ref` 设为本次采用的固定副本相对于项目根目录的路径。
+   按本次任务的规则确认所选输入中没有项目约定文件时，才填 `null`。
 3. 在本任务的 `ROUND.yaml` 或 `PAPER.md` 中记录该引用、本次例外及其适用范围。
 4. 向 researcher、worker 和 verifier 提供适用条款、本次例外及固定记录的引用。
 

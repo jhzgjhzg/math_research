@@ -2,7 +2,7 @@
 name: math-research
 description: Start a mathematical research round, redo a completed round, or resume an interrupted round. Integrate results into a paper or review other ways to prove or disprove the original claim. Update the register of contributed material. Use the project AGENTS.md from the same release.
 metadata:
-  version: "0.6.0"
+  version: "0.6.1"
 ---
 
 # Mathematical research procedure
@@ -83,7 +83,8 @@ For a route review, give each researcher the applicable clauses and task excepti
 For a new round or paper task, record the rules as follows.
 
 1. If the selected rules file exists, save its exact text as `PROJECT_RULES_r01.md` in the task directory.
-2. Set `project_rules_ref` to the project-relative path of that fixed copy, or to `null` for confirmed absence.
+2. Set `project_rules_ref` to the path of that fixed copy relative to the project root.
+   Use `null` only if you confirm that the inputs selected under the task rules contain no project rules file.
 3. Record this reference and any task exceptions with their scope in `ROUND.yaml` or `PAPER.md`, as applicable.
 4. Give the researcher, workers, and verifiers the applicable clauses, task exceptions, and fixed record reference.
 

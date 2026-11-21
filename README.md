@@ -1,6 +1,6 @@
 # Math Research
 
-Version: **0.6.0**
+Version: **0.6.1**
 
 Use these instructions with Codex to run mathematical research rounds, review alternative routes, or prepare a paper from accumulated results.
 You can also register ideas, proof drafts, and unpublished manuscripts for use in these tasks.

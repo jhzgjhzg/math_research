@@ -1,6 +1,6 @@
 # Mathematical research rules
 
-Version: 0.6.0
+Version: 0.6.1
 
 Use these rules to start a research round, redo a completed round, or resume an interrupted round.
 They also apply to paper integration, route reviews, and updates to the register of contributed material.
